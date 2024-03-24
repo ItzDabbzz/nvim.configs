@@ -40,7 +40,7 @@
 - Detect tabstop and shiftwidth automatically [vim-sleuth](https://github.com/tpope/vim-sleuth)
 - Auto set working dir to project root [vim-rooter](https://github.com/airblade/vim-rooter)
 - Colorize all things [nvim-colorizer.lua](https://github.com/norcalli/nvim-colorizer.lua)
-- Full NeoVim signature help, documentation and completion for the nvim lua API [neodev.nvim](https://
+- Full NeoVim signature help, documentation and completion for the nvim lua API [neodev.nvim](https://github.com/folke/neodev.nvim)
 - A pretty trouble list [trouble.nvim](https://github.com/folke/trouble.nvim)
 - A Color Picker [color-picker.nvim](https://github.com/ziontee113/color-picker.nvim)
 - Develop inside Docker Containers [nvim-remove-containers](https://github.com/jamestthompson3/nvim-remote-containers)
