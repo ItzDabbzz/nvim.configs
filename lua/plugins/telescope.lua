@@ -9,6 +9,7 @@ return {
 			"xiyaowong/telescope-emoji.nvim",
 			"debugloop/telescope-undo.nvim",
 			"tsakirist/telescope-lazy.nvim",
+			"cljoly/telescope-repo.nvim",
 			-- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
 			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make", cond = vim.fn.executable("make") == 1 },
 		},
@@ -25,11 +26,12 @@ return {
 			})
 
 			-- Enable telescope fzf native, if installed
-			pcall(require("telescope").load_extension, "fzf")
-			pcall(require("telescope").load_extension, "software-licenses")
-			pcall(require("telescope").load_extension, "emoji")
-			pcall(require("telescope").load_extension, "undo")
-			pcall(require("telescope").load_extension "lazy")
+			pcall(require("telescope").load_extension"fzf")
+			pcall(require("telescope").load_extension"software-licenses")
+			pcall(require("telescope").load_extension"emoji")
+			pcall(require("telescope").load_extension"undo")
+			pcall(require("telescope").load_extension"lazy")
+			pcall(require'telescope'.load_extension'repo')
 
 			local map = require("helpers.keys").map
 			map("n", "<leader>fr", require("telescope.builtin").oldfiles, "Recently opened")

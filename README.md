@@ -15,17 +15,45 @@
     - `:Telescope emoji` ***Emoji Manager For Telescope***
     - `:Telescope software-licenses find` ***Software Licenses Manager For Telescope***
 - `:IconPickerInsert`
-    - [icon-picker.nvim](https://github.com/ziontee113/icon-picker.nvim)
+
+# Features
+- ⌨  Key-binding Reminder [which-key.nvim](https://github.com/folke/which-key.nvim)
+- Tree-sitter parsing [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+- 🗄 File Explorer [neo-tree.nvim](https://github.com/nvim-neo-tree/neo-tree.nvim)
+- Find, Filter, Preview, Pick. [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
+    - ⏱  Undo Tree [telescope-undo.nvim](https://github.com/debugloop/telescope-undo.nvim)
+    - 💤 Lazy Extender [telescope-lazy](https://github.com/tsakirist/telescope-lazy.nvim)
+    - 🎉 Emojis [telescome-emoji.nvim](https://github.com/xiyaowong/telescope-emoji.nvim)
+    - 🗃 Git Repos [telescope-repo.nvim](https://github.com/cljoly/telescope-repo.nvim)
+- Icon Picker [icon-picker.nvim](https://github.com/ziontee113/icon-picker.nvim)
 - Visual Whitespace [visual-whitespace.nvim](https://github.com/mcauley-penney/visual-whitespace.nvim)
 - UFO [nvim-ufo](https://github.com/kevinhwang91/nvim-ufo)
 - Popup Messages 🗯 [noice.nvim](https://github.com/folke/noice.nvim)
 - Auto Tags [nvim-ts-autotag](https://github.com/windwp/nvim-ts-autotag)
 - 🌈 Rainbow Brackets [rainbow-delimiters.nvim](https://github.com/HiPhish/rainbow-delimiters.nvim)
 - Trouble Checker [trouble.nvim](https://github.com/folke/trouble.nvim?tab=readme-ov-file)
-
-
-
-
+- Simple and Clean UI / Popups [noice.nvim](https://github.com/folke/noice.nvim)
+- Easy Code Commenting [Comment.nvim](https://github.com/numToStr/Comment.nvim)
+- Quick Moves [mini.move](https://github.com/echasnovski/mini.move)
+- Better Buffer Closing Actions [close-buffers.nvim](https://github.com/kazhala/close-buffers)
+- Easy Terminals [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)
+- Detect tabstop and shiftwidth automatically [vim-sleuth](https://github.com/tpope/vim-sleuth)
+- Auto set working dir to project root [vim-rooter](https://github.com/airblade/vim-rooter)
+- Colorize all things [nvim-colorizer.lua](https://github.com/norcalli/nvim-colorizer.lua)
+- Full NeoVim signature help, documentation and completion for the nvim lua API [neodev.nvim](https://
+- A pretty trouble list [trouble.nvim](https://github.com/folke/trouble.nvim)
+- A Color Picker [color-picker.nvim](https://github.com/ziontee113/color-picker.nvim)
+- Develop inside Docker Containers [nvim-remove-containers](https://github.com/jamestthompson3/nvim-remote-containers)
+- 💬 Todo Comments [todo-comments.nvim](https://github.com/folke/todo-comments.nvim)
+- Easy Markdown Preview [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim)
+- Clean Status Line [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
+- Nvim LSP [lspconfig.nvim](https://github.com/neovim/nvim-lspconfig)
+- 🌎 LSP Manager [mason.nvim](https://github.com/williamboman/mason.nvim)
+- LSP Fidget [fidge.nvim](https://github.com/j-hui/fidget.nvim)
+- Go Development [go.nvim](https://github.com/ray-x/go.nvim)
+- Debug UI [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui)
+- Text Completion [nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
+- Easy Cheet Sheet [cheatsheet.nvim](https://github.com/doctorfree/cheatsheet.nvim)
 
 
 
