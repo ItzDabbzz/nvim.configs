@@ -26,12 +26,11 @@ return {
 			})
 
 			-- Enable telescope fzf native, if installed
-			pcall(require("telescope").load_extension"fzf")
-			pcall(require("telescope").load_extension"software-licenses")
-			pcall(require("telescope").load_extension"emoji")
-			pcall(require("telescope").load_extension"undo")
-			pcall(require("telescope").load_extension"lazy")
-			pcall(require'telescope'.load_extension'repo')
+			--pcall(require("telescope").load_extension"fzf")
+			pcall(require("telescope").load_extension("software-licenses"))
+			pcall(require("telescope").load_extension("emoji"))
+			pcall(require("telescope").load_extension("lazy"))
+			pcall(require('telescope').load_extension("repo"))
 
 			local map = require("helpers.keys").map
 			map("n", "<leader>fr", require("telescope.builtin").oldfiles, "Recently opened")
