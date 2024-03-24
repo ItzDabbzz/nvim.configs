@@ -77,3 +77,11 @@ map("n", "<leader>cphsa", "<cmd>Colortils picker hsla<CR>", "Color Picker hsla")
 -- terminal
 map("t", "<Esc>", "<C-\\><C-n>")
 map("t", "<C-w>", "<C-\\><C-n><C-w>")
+
+map("n", "]t", function ()
+	require("todo-comments").jump_next()
+end, "Jump Next Todo")
+
+map("n", "[t", function ()
+	require("todo-comments").jump_prev()
+end, "Jump Prev Todo")

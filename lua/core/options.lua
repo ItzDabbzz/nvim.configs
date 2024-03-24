@@ -12,7 +12,7 @@ local opts = {
 	-- wrapped line repeats indent
 	breakindent = true,
 	-- number of lines to use for the command-line
-	cmdheigh = 0,
+	cmdheigh = 1,
 	-- height of the command-line window
 	cmdminheight = 5,
 	-- columns to highlight
@@ -78,7 +78,7 @@ local opts = {
 	-- print the line number in front of each line
 	number = true,
 	-- number of colums used for each line number
-	numberwidth = 3,
+	numberwidth = 4,
 	-- height of the preview window
 	previewheight = 12,
 	-- ?
@@ -88,7 +88,7 @@ local opts = {
 	-- timeout for 'hlsearch' and :match highlighting
 	redrawtime = 100,
 	-- show realative line number in front of each line
-	relativenumber = true,
+	relativenumber = false,
 	-- show cursor line and column in the status line
 	ruler = false,
 	-- options for :mksessions
@@ -156,7 +156,7 @@ local opts = {
 	-- mode for 'wildchar' command-line expansion
 	wildmode = "longest:full,full",
 	-- ?
-	winblend = 10,
+	--winblend = 10,
 	-- min number of columns for any window
 	winminwidth = 10,
 	-- min number of columns for current window
