@@ -85,3 +85,7 @@ end, "Jump Next Todo")
 map("n", "[t", function ()
 	require("todo-comments").jump_prev()
 end, "Jump Prev Todo")
+
+map("n", "<leader>qs", [[<CMD>lua require("persistence").load()<CR>]], "Restore Session For Current Directory")
+map("n", "<leader>ql", [[<cmd>lua require("persistence").load({ last = true })<cr>]], "Restore Last Session")
+map("n", "<leader>qd", [[<cmd>lua require("persistence").stop()<cr>]], "Stop Persistence to not save")
