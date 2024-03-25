@@ -89,7 +89,7 @@ return {
 					vim.lsp.buf.format()
 				end, { desc = "Format current buffer with LSP" })
 
-				lsp_map("<leader>ff", "<cmd>Format<cr>", bufnr, "Format")
+				lsp_map("<leader>fm", "<cmd>Format<cr>", bufnr, "Format")
 
 				-- Attach and configure vim-illuminate
 				require("illuminate").on_attach(client)
