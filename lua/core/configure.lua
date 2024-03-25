@@ -2,6 +2,8 @@ local function list(items, sep)
     return table.concat(items, sep or ",")
 end
 
+local opt = vim.opt
+
 opt.fillchars = list {
     -- "vert:▏",
     "vert:│",
