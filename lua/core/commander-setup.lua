@@ -90,20 +90,20 @@ commander.add({
         cmd = "<CMD>Colortils picker<CR>",
         keys = { "n", "<leader>cp" }
     },
-    {
-        desc = "Rename Symbol",
-        keys = { "n", "<leader>lr" }
-    },
-    {
-        desc = "Code Action",
-        keys = { "n", "<leader>la" }
-    },
-    {
-        desc = "Type Definition",
-        keys = { "n", "<leader>ld" }
-    },
-    {
-        desc = "Document Symbols",
-        keys = { "n", "<leader>ls" }
-    },
+    --{
+    --    desc = "Rename Symbol",
+    --    keys = { "n", "<leader>lr" }
+    --},
+    --{
+    --    desc = "Code Action",
+    --    keys = { "n", "<leader>la" }
+    --},
+    --{
+    --    desc = "Type Definition",
+    --    keys = { "n", "<leader>ld" }
+    --},
+    --{
+    --    desc = "Document Symbols",
+    --    keys = { "n", "<leader>ls" }
+    --},
 })
