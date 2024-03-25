@@ -175,7 +175,8 @@ for opt, val in pairs(opts) do
 end
 
 -- Set other options
-vim.cmd.colorscheme 'catppuccin'
+local colorscheme = require("helpers.colorscheme")
+vim.cmd.colorscheme(colorscheme)
 
 vim.diagnostic.config({
     update_in_insert = false
