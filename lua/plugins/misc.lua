@@ -129,5 +129,14 @@ return {
 				test = { "Identifier", "#FF00FF" }
 			},
 		}
+	},
+	{
+		"folke/persistence.nvim",
+		event = "BufReadPre", -- this will only start session saving when an actual file was opened
+		opts = {
+		    -- add any custom options here
+			  options = { "buffers", "curdir", "tabpages", "winsize" }, -- sessionoptions used for saving
+			  save_empty = false, -- don't save if there are no open file buffers
+		}
 	}
 }
