@@ -2,6 +2,7 @@ return {
   'nvimdev/dashboard-nvim',
   event = 'VimEnter',
   config = function()
+    local icons = require("helpers.icons")
 
     require('dashboard').setup {
       -- config
@@ -13,7 +14,7 @@ return {
         shortcut = {
           { desc = '󰊳 Update', group = '@property', action = 'Lazy update', key = 'u' },
           {
-            icon = ' ',
+            icon = icons.ui.Files,
             icon_hl = '@variable',
             desc = 'Files',
             group = 'Label',
@@ -21,13 +22,15 @@ return {
             key = 'f',
           },
           {
-            desc = ' Apps',
+            icon = icons.ui.Home,
+            desc = 'Apps',
             group = 'DiagnosticHint',
             action = 'Telescope app',
             key = 'a',
           },
           {
-            desc = ' dotfiles',
+            icon = icons.ui.Dotfiles,
+            desc = 'dotfiles',
             group = 'Number',
             action = 'Telescope dotfiles',
             key = 'd',
