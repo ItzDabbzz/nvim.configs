@@ -4,11 +4,11 @@ local map = require("helpers.keys").map
 map("i", "jk", "<esc>")
 
 -- Quick access to some common actions
-map("n", "<leader>fw", "<cmd>w<cr>", "Write")
-map("n", "<leader>fa", "<cmd>wa<cr>", "Write all")
-map("n", "<leader>qq", "<cmd>q<cr>", "Quit")
-map("n", "<leader>qa", "<cmd>qa!<cr>", "Quit all")
-map("n", "<leader>dw", "<cmd>close<cr>", "Window")
+--map("n", "<leader>fw", "<cmd>w<cr>", "Write")
+--map("n", "<leader>fa", "<cmd>wa<cr>", "Write all")
+--map("n", "<leader>qq", "<cmd>q<cr>", "Quit")
+--map("n", "<leader>qa", "<cmd>qa!<cr>", "Quit all")
+--map("n", "<leader>dw", "<cmd>close<cr>", "Window")
 
 -- Diagnostic keymaps
 map('n', 'bx', vim.diagnostic.open_float, "Show diagnostics under cursor")
@@ -36,10 +36,10 @@ map("n", "<C-Left>", ":vertical resize +2<CR>")
 map("n", "<C-Right>", ":vertical resize -2<CR>")
 
 -- Deleting buffers
-local buffers = require("helpers.buffers")
-map("n", "<leader>db", buffers.delete_this, "Current buffer")
-map("n", "<leader>do", buffers.delete_others, "Other buffers")
-map("n", "<leader>da", buffers.delete_all, "All buffers")
+--local buffers = require("helpers.buffers")
+--map("n", "<leader>db", buffers.delete_this, "Current buffer")
+--map("n", "<leader>do", buffers.delete_others, "Other buffers")
+--map("n", "<leader>da", buffers.delete_all, "All buffers")
 
 -- Navigate buffers
 map("n", "<S-l>", ":bnext<CR>")
@@ -50,24 +50,19 @@ map("v", "<", "<gv")
 map("v", ">", ">gv")
 
 -- Switch between light and dark modes
-map("n", "<leader>ut", function()
-	if vim.o.background == "dark" then
-		vim.o.background = "light"
-	else
-		vim.o.background = "dark"
-	end
-end, "Toggle between light and dark themes")
+--map("n", "<leader>ut", function()
+--	if vim.o.background == "dark" then
+--		vim.o.background = "light"
+--	else
+--		vim.o.background = "dark"
+--	end
+--end, "Toggle between light and dark themes")
 
 -- Clear after search
-map("n", "<leader>ur", "<cmd>nohl<CR>", "Clear highlights")
+--map("n", "<leader>ur", "<cmd>nohl<CR>", "Clear highlights")
 
 -- Undotree Toggle
-map("n", "<leader>ut", "<cmd>UndotreeToggle<cr>", "Toggle undo tree")
+--map("n", "<leader>ut", "<cmd>UndotreeToggle<cr>", "Toggle undo tree")
 
 -- Neotree Toggle
-map(
-	{ "n", "v" },
-	"<leader>ue",
-	"<cmd>Neotree toggle<cr>",
-	"Toggle file explorer"
-)
+--map( { "n", "v" }, "<leader>ue", "<cmd>Neotree toggle<cr>", "Toggle file explorer" )
