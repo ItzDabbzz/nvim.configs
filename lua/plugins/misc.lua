@@ -27,7 +27,16 @@ return {
     },
     {
         'akinsho/toggleterm.nvim',
+        branch = "main",
         version = "*",
+        cmd = {
+          "ToggleTerm",
+          "TermExec",
+          "ToggleTermToggleAll",
+          "ToggleTermSendCurrentLine",
+          "ToggleTermSendVisualLines",
+          "ToggleTermSendVisualSelection",
+        },
         opts = { --[[ things you want to change go here]] }
     },
     "airblade/vim-rooter",          -- Set working directory to project root
@@ -73,17 +82,17 @@ return {
         opts = {
             keywords = {
                 FIX = {
-                    icon = " ", -- icon used for the sign, and in search results
+                    icon = require("helpers.icons").diagnostics.Bug .. " ", -- icon used for the sign, and in search results
                     color = "error", -- can be a hex color, or a named color (see below)
                     alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
                     -- signs = false, -- configure signs for some keywords individually
                 },
-                TODO = { icon = " ", color = "info" },
-                HACK = { icon = " ", color = "warning" },
-                WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-                PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-                NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
-                TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+                TODO = { icon = require("helpers.icons").ui.Note .. " ", color = "info" },
+                HACK = { icon = require("helpers.icons").ui.Fire .. " ", color = "warning" },
+                WARN = { icon = require("helpers.icons").diagnostics.Warning .. " ", color = "warning", alt = { "WARNING", "XXX" } },
+                PERF = { icon = require("helpers.icons").diagnostics.BoldQuestion .. " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+                NOTE = { icon = require("helpers.icons").diagnostics.Hint .. " ", color = "hint", alt = { "INFO" } },
+                TEST = { icon = require("helpers.icons").diagnostics.BoldHint .. " ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
             },
             gui_style = {
                 fg = "NONE", -- The gui style to use for the fg highlight group.
@@ -118,4 +127,11 @@ return {
             },
         }
     },
+    { -- TODO: Set this up
+        "RRethy/vim-illuminate",
+        event = "User FileOpened",
+        config = function()
+
+        end,
+    }
 }

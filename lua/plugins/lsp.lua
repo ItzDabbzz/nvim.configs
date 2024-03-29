@@ -3,13 +3,14 @@ return {
     cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
-        { 'onsails/lspkind.nvim' },
-        { 'hrsh7th/cmp-nvim-lua' },
-        { 'hrsh7th/cmp-nvim-lsp' },
-        { 'hrsh7th/cmp-buffer' },
-        { 'hrsh7th/cmp-path' },
-        { 'saadparwaiz1/cmp_luasnip' },
-        { 'williamboman/mason-lspconfig.nvim' },
+        { 'onsails/lspkind.nvim', lazy = true },
+        { 'hrsh7th/cmp-nvim-lua', lazy = true },
+        { 'hrsh7th/cmp-nvim-lsp', lazy = true },
+        { 'hrsh7th/cmp-buffer', lazy = true },
+        { 'hrsh7th/cmp-path', lazy = true },
+        { 'saadparwaiz1/cmp_luasnip', lazy = true },
+        { 'williamboman/mason-lspconfig.nvim', lazy = true },
+        { "b0o/schemastore.nvim", lazy = true },
     },
     config = function()
         -- This is where all the LSP shenanigans will live
@@ -24,8 +25,8 @@ return {
             lsp_zero.default_keymaps({ buffer = bufnr })
         end)
 
-        
-        lsp_zero.set_sign_icons({ error = "✘", warn = "", hint = "󱧡", info = "" })
+        local icons = require("helpers.icons")
+        lsp_zero.set_sign_icons({ error = icons.diagnostics.Error, warn = icons.diagnostics.Warning, hint = icons.diagnostics.Hint, info = icons.diagnostics.Information })
 
         -- TODO: Let which-key know about gq being format file
         lsp_zero.format_mapping('gq', {
@@ -75,6 +76,35 @@ return {
                 end,
                 gopls = function()
                     require('lspconfig').gopls.setup({})
+                end,
+                jsonls = function()
+                    require('lspconfig').jsonls.setup {
+                        settings = {
+                          json = {
+                            schemas = require('schemastore').json.schemas(),
+                            validate = { enable = true },
+                          },
+                          yaml = {
+                            schemaStore = {
+                              -- You must disable built-in schemaStore support if you want to use
+                              -- this plugin and its advanced options like `ignore`.
+                              enable = false,
+                              -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+                              url = "",
+                            },
+                            schemas = require('schemastore').yaml.schemas(),
+                          },
+                        },
+                        setup = {
+                          commands = {
+                            Format = {
+                              function()
+                                vim.lsp.buf.range_formatting({}, { 0, 0 }, { vim.fn.line "$", 0 })
+                              end,
+                            },
+                          },
+                        },
+                      }
                 end,
                 jdtls = function()
                     require('lspconfig').jdtls.setup({})

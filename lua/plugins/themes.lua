@@ -1,22 +1,36 @@
 -- Themes
 return {
-	"typicode/bg.nvim",
+	{
+		"typicode/bg.nvim",
+		lazy = true,
+	},
 
-	"ellisonleao/gruvbox.nvim",
+	{
+		"ellisonleao/gruvbox.nvim",
+		lazy = true,
+	},
 
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
+		lazy = true,
 	},
 
 	{
 		"rose-pine/nvim",
 		name = "rose-pine",
+		lazy = true,
 	},
- 
-	"sainnhe/everforest",
 
-	"savq/melange-nvim",
+	{
+		"sainnhe/everforest",
+		lazy = true,
+	},
+
+	{
+		"savq/melange-nvim",
+		lazy = true,
+	},
 
 	-- Kanagawa Theme
 	-- 3 Variants:
@@ -25,7 +39,13 @@ return {
 	-- - lotus - when you're out in the open
 	-- require("kanagawa").load("wave")
 	-- https://github.com/rebelot/kanagawa.nvim
-	"rebelot/kanagawa.nvim",
+	{
+		"rebelot/kanagawa.nvim",
+		lazy = true,
+	},
 
-	{ "EdenEast/nightfox.nvim" }
+	{
+		"EdenEast/nightfox.nvim",
+		lazy = true,
+	}
 }

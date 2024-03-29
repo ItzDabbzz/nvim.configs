@@ -8,6 +8,7 @@ return {
 			"nvim-tree/nvim-web-devicons",
 			"MunifTanjim/nui.nvim",
 			"3rd/image.nvim",
+			"mrbjarksen/neo-tree-diagnostics.nvim"
 		},
 		config = function()
 			-- If you want icons for diagnostic errors, you'll need to define them somewhere:
@@ -42,32 +43,26 @@ return {
 				}
 			end
 
-			local function removeFileFromPath(path)
-				local lastSlashIndex = path:match("^.+()\\[^\\]*$") -- Match the last slash and everything before it
-				if lastSlashIndex then
-					return path:sub(1, lastSlashIndex - 1) -- Extract substring before the last slash
-				else
-					return path                         -- If no slash found, return original path
-				end
-			end
+			local icons = require("helpers.icons")
 
 			require("neo-tree").setup({
-				event_handlers = {
-					{
-						event = "neo_tree_popup_input_ready",
-						handler = function(args)
-							-- enter input popup with normal mode by default.
-							vim.cmd("stopinsert")
-							vim.keymap.set("i", "<esc>", vim.cmd.stopinsert, { noremap = true, buffer = args.bufnr })
-						end,
-					},
+				sources = {
+					"filesystem",
+					"buffers",
+					"git_status",
+					"diagnostics",
+					-- "document_symbols",
 				},
+				add_blank_line_at_top = true, -- Add a blank line at the top of the tree.
 				close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
 				popup_border_style = "rounded",
 				enable_git_status = true,
 				enable_diagnostics = true,
+				enable_modified_markers = true,                                -- Show markers for files with unsaved changes.
+				enable_opened_markers = true,                                  -- Enable tracking of opened files. Required for `components.name.highlight_opened_files`
+				enable_refresh_on_write = true,                                -- Refresh the tree when a file is written. Only used if `use_libuv_file_watcher` is false.
 				neo_tree_popup_input_ready = true,
-				enable_normal_mode_for_inputs = true,                          -- Enable normal mode for input dialogs.
+				enable_normal_mode_for_inputs = false,                         -- Enable normal mode for input dialogs.
 				open_files_do_not_replace_types = { "terminal", "Trouble", "qf", "edgy" }, -- when opening files, do not use windows containing these filetypes or buftypes
 				sort_case_insensitive = true,                                  -- used when sorting files and directories in the tree
 				default_component_configs = {
@@ -84,42 +79,45 @@ return {
 						highlight = "NeoTreeIndentMarker",
 						-- expander config, needed for nesting files
 						with_expanders = nil, -- if nil and file nesting is enabled, will enable expanders
-						expander_collapsed = "",
-						expander_expanded = "",
+						expander_collapsed = icons.ui.Folder,
+						expander_expanded = icons.ui.FolderOpen,
 						expander_highlight = "NeoTreeExpander",
 					},
 					icon = {
-						folder_closed = "",
-						folder_open = "",
-						folder_empty = "󰜌",
+						folder_closed = icons.ui.Folder,
+						folder_open = icons.ui.FolderOpen,
+						folder_empty = icons.ui.EmptyFolder,
+						folder_empty_open = icons.ui.EmptyFolderOpen,
 						-- The next two settings are only a fallback, if you use nvim-web-devicons and configure default icons there
 						-- then these will never be used.
 						default = "*",
 						highlight = "NeoTreeFileIcon"
 					},
 					modified = {
-						symbol = "[+]",
+						symbol = icons.ui.Plus,
 						highlight = "NeoTreeModified",
 					},
 					name = {
 						trailing_slash = false,
+						highlight_opened_files = true,
 						use_git_status_colors = true,
 						highlight = "NeoTreeFileName",
 					},
 					git_status = {
 						symbols = {
 							-- Change type
-							added     = "✚", -- or "✚", but this is redundant info if you use git_status_colors on the name
-							modified  = "●", -- or "", but this is redundant info if you use git_status_colors on the name
-							deleted   = "✖", -- this can only be used in the git_status source
-							renamed   = "󰁕", -- this can only be used in the git_status source
+							--added     = icons.git.LineAdded, -- or "✚", but this is redundant info if you use git_status_colors on the name
+							--modified  = icons.git.FileModified, -- or "", but this is redundant info if you use git_status_colors on the name
+							deleted   = icons.git.FileDeleted, -- this can only be used in the git_status source
+							renamed   = icons.git.FileRenamed, -- this can only be used in the git_status source
 							-- Status type
-							untracked = "",
-							ignored   = "",
-							unstaged  = "󰄱",
-							staged    = "",
-							conflict  = "",
-						}
+							untracked = icons.git.FileUntracked,
+							ignored   = icons.git.FileIgnored,
+							unstaged  = icons.git.FileUnstaged,
+							staged    = icons.git.FileStaged,
+							conflict  = icons.git.Conflict,
+						},
+						align = "right",
 					},
 					-- If you don't want to use these columns, you can set `enabled = false` for each of them individually
 					file_size = {
@@ -155,7 +153,7 @@ return {
 						if lastSlashIndex then
 							p = path:sub(1, lastSlashIndex - 1) -- Extract substring before the last slash
 						else
-							p = path -- If no slash found, return original path
+							p = path                      -- If no slash found, return original path
 						end
 						vim.cmd("silent !start explorer " .. p)
 					end,
@@ -190,17 +188,10 @@ return {
 						["l"] = "focus_preview",
 						["S"] = "open_split",
 						["s"] = "open_vsplit",
-						-- ["S"] = "split_with_window_picker",
-						-- ["s"] = "vsplit_with_window_picker",
 						["t"] = "open_tabnew",
-						-- ["<cr>"] = "open_drop",
-						-- ["t"] = "open_tab_drop",
 						["w"] = "open_with_window_picker",
-						--["P"] = "toggle_preview", -- enter preview mode, which shows the current node without focusing
 						["C"] = "close_node",
-						-- ['C'] = 'close_all_subnodes',
 						["z"] = "close_all_nodes",
-						--["Z"] = "expand_all_nodes",
 						["a"] = {
 							"add",
 							-- this command supports BASH style brace expansion ("x{a,b,c}" -> xa,xb,xc). see `:h neo-tree-file-actions` for details
@@ -229,6 +220,7 @@ return {
 						["<"] = "prev_source",
 						[">"] = "next_source",
 						["i"] = "show_file_details",
+						["e"] = "toggle_auto_expand_width",
 					}
 				},
 				nesting_rules = {},
@@ -258,17 +250,17 @@ return {
 						},
 					},
 					follow_current_file = {
-						enabled = false,     -- This will find and focus the file in the active buffer every time
+						enabled = true,      -- This will find and focus the file in the active buffer every time
 						--               -- the current file is changed while the tree is open.
-						leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+						leave_dirs_open = true, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
 					},
 					group_empty_dirs = false, -- when true, empty folders will be grouped together
-					hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
+					hijack_netrw_behavior = "open_current", -- netrw disabled, opening a directory opens neo-tree
 					-- in whatever position is specified in window.position
 					-- "open_current",  -- netrw disabled, opening a directory opens within the
 					-- window like netrw would, regardless of window.position
 					-- "disabled",    -- netrw left alone, neo-tree does not handle opening dirs
-					use_libuv_file_watcher = false, -- This will use the OS level file watchers to detect changes
+					use_libuv_file_watcher = true, -- This will use the OS level file watchers to detect changes
 					-- instead of relying on nvim autocmd events.
 					window = {
 						mappings = {
@@ -335,7 +327,74 @@ return {
 							["o"]  = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
 						}
 					}
-				}
+				},
+				source_selector = {
+					winbar = true,
+					statusline = true
+				},
+				diagnostics = {
+					components = {
+						linenr = function(config, node)
+							local lnum = tostring(node.extra.diag_struct.lnum + 1)
+							local pad = string.rep(" ", 4 - #lnum)
+							return {
+								{
+									text = pad .. lnum,
+									highlight = "LineNr",
+								},
+								{
+									text = "▕ ",
+									highlight = "NeoTreeDimText",
+								}
+							}
+						end
+					},
+					renderers = {
+						file = {
+							{ "indent" },
+							{ "icon" },
+							{ "grouped_path" },
+							{ "name",             highlight = "NeoTreeFileNameOpened" },
+							{ "diagnostic_count", highlight = "NeoTreeDimText",       severity = "Error", right_padding = 0 },
+							{ "diagnostic_count", highlight = "NeoTreeDimText",       severity = "Warn",  right_padding = 0 },
+							{ "diagnostic_count", highlight = "NeoTreeDimText",       severity = "Info",  right_padding = 0 },
+							{ "diagnostic_count", highlight = "NeoTreeDimText",       severity = "Hint",  right_padding = 0 },
+							{ "clipboard" },
+						},
+						diagnostic = {
+							{ "indent" },
+							{ "icon" },
+							{ "linenr" },
+							{ "name" },
+						},
+					},
+					auto_preview = {   -- May also be set to `true` or `false`
+						enabled = false, -- Whether to automatically enable preview mode
+						preview_config = {}, -- Config table to pass to auto preview (for example `{ use_float = true }`)
+						event = "neo_tree_buffer_enter", -- The event to enable auto preview upon (for example `"neo_tree_window_after_open"`)
+					},
+					bind_to_cwd = true,
+					diag_sort_function = "severity", -- "severity" means diagnostic items are sorted by severity in addition to their positions.
+					-- "position" means diagnostic items are sorted strictly by their positions.
+					-- May also be a function.
+					follow_current_file = { -- May also be set to `true` or `false`
+						enabled = true, -- This will find and focus the file in the active buffer every time
+						always_focus_file = false, -- Focus the followed file, even when focus is currently on a diagnostic item belonging to that file
+						expand_followed = true, -- Ensure the node of the followed file is expanded
+						leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+						leave_files_open = false, -- `false` closes auto expanded files, such as with `:Neotree reveal`
+					},
+					group_dirs_and_files = true, -- when true, empty folders and files will be grouped together
+					group_empty_dirs = true, -- when true, empty directories will be grouped together
+					show_unloaded = true, -- show diagnostics from unloaded buffers
+					refresh = {
+						delay = 100,    -- Time (in ms) to wait before updating diagnostics. Might resolve some issues with Neovim hanging.
+						event = "vim_diagnostic_changed", -- Event to use for updating diagnostics (for example `"neo_tree_buffer_enter"`)
+						-- Set to `false` or `"none"` to disable automatic refreshing
+						max_items = 10000, -- The maximum number of diagnostic items to attempt processing
+						-- Set to `false` for no maximum
+					},
+				},
 			})
 
 			vim.cmd([[nnoremap \ :Neotree reveal<cr>]])
