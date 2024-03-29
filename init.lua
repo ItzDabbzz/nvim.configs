@@ -1,4 +1,4 @@
--- Handle plugins with lazy.nvim
+--Handle plugins with lazy.nvim
 require("core.lazy")
 
 -- General Neovim keymaps
