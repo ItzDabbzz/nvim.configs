@@ -2,30 +2,12 @@
 return {
 	{
 		"nvim-neo-tree/neo-tree.nvim",
-		branch = "v2.x",
+		branch = "v3.x",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons",
 			"MunifTanjim/nui.nvim",
-			{
-				's1n7ax/nvim-window-picker',
-				version = '2.*',
-				config = function()
-					require 'window-picker'.setup({
-						filter_rules = {
-							include_current_win = false,
-							autoselect_one = true,
-							-- filter using buffer options
-							bo = {
-								-- if the file type is one of following, the window will be ignored
-								filetype = { 'neo-tree', "neo-tree-popup", "notify" },
-								-- if the buffer type is one of following, the window will be ignored
-								buftype = { 'terminal', "quickfix" },
-							},
-						},
-					})
-				end,
-			},
+			"3rd/image.nvim",
 		},
 		config = function()
 			-- If you want icons for diagnostic errors, you'll need to define them somewhere:
@@ -38,16 +20,56 @@ return {
 			vim.fn.sign_define("DiagnosticSignHint",
 				{ text = "󰌵", texthl = "DiagnosticSignHint" })
 
-			require("neo-tree").setup({
+			local function getTelescopeOpts(state, path)
+				return {
+					cwd = path,
+					search_dirs = { path },
+					attach_mappings = function(prompt_bufnr, map)
+						local actions = require "telescope.actions"
+						actions.select_default:replace(function()
+							actions.close(prompt_bufnr)
+							local action_state = require "telescope.actions.state"
+							local selection = action_state.get_selected_entry()
+							local filename = selection.filename
+							if (filename == nil) then
+								filename = selection[1]
+							end
+							-- any way to open the file without triggering auto-close event of neo-tree?
+							require("neo-tree.sources.filesystem").navigate(state, state.path, filename)
+						end)
+						return true
+					end
+				}
+			end
 
-				close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
+			local function removeFileFromPath(path)
+				local lastSlashIndex = path:match("^.+()\\[^\\]*$") -- Match the last slash and everything before it
+				if lastSlashIndex then
+					return path:sub(1, lastSlashIndex - 1) -- Extract substring before the last slash
+				else
+					return path                         -- If no slash found, return original path
+				end
+			end
+
+			require("neo-tree").setup({
+				event_handlers = {
+					{
+						event = "neo_tree_popup_input_ready",
+						handler = function(args)
+							-- enter input popup with normal mode by default.
+							vim.cmd("stopinsert")
+							vim.keymap.set("i", "<esc>", vim.cmd.stopinsert, { noremap = true, buffer = args.bufnr })
+						end,
+					},
+				},
+				close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
 				popup_border_style = "rounded",
 				enable_git_status = true,
 				enable_diagnostics = true,
-				enable_normal_mode_for_inputs = false,                 -- Enable normal mode for input dialogs.
+				neo_tree_popup_input_ready = true,
+				enable_normal_mode_for_inputs = true,                          -- Enable normal mode for input dialogs.
 				open_files_do_not_replace_types = { "terminal", "Trouble", "qf", "edgy" }, -- when opening files, do not use windows containing these filetypes or buftypes
-				sort_case_insensitive = false,                         -- used when sorting files and directories in the tree
-				sort_function = nil,                                   -- use a custom function for sorting files and directories in the tree
+				sort_case_insensitive = true,                                  -- used when sorting files and directories in the tree
 				default_component_configs = {
 					container = {
 						enable_character_fade = true
@@ -102,19 +124,19 @@ return {
 					-- If you don't want to use these columns, you can set `enabled = false` for each of them individually
 					file_size = {
 						enabled = true,
-						required_width = 64, -- min width of window required to show this column
+						required_width = 40, -- min width of window required to show this column
 					},
 					type = {
-						enabled = true,
-						required_width = 122, -- min width of window required to show this column
+						enabled = false,
+						required_width = 45, -- min width of window required to show this column
 					},
 					last_modified = {
-						enabled = true,
-						required_width = 88, -- min width of window required to show this column
+						enabled = false,
+						required_width = 60, -- min width of window required to show this column
 					},
 					created = {
-						enabled = true,
-						required_width = 110, -- min width of window required to show this column
+						enabled = false,
+						required_width = 60, -- min width of window required to show this column
 					},
 					symlink_target = {
 						enabled = false,
@@ -123,10 +145,34 @@ return {
 				-- A list of functions, each representing a global custom command
 				-- that will be available in all sources (if not overridden in `opts[source_name].commands`)
 				-- see `:h neo-tree-custom-commands-global`
-				commands = {},
+				commands = {
+					system_open = function(state)
+						local node = state.tree:get_node()
+						local path = node:get_id()
+						-- Without removing the file from the path, it opens in code.exe instead of explorer.exe
+						local p
+						local lastSlashIndex = path:match("^.+()\\[^\\]*$") -- Match the last slash and everything before it
+						if lastSlashIndex then
+							p = path:sub(1, lastSlashIndex - 1) -- Extract substring before the last slash
+						else
+							p = path -- If no slash found, return original path
+						end
+						vim.cmd("silent !start explorer " .. p)
+					end,
+					telescope_find = function(state)
+						local node = state.tree:get_node()
+						local path = node:get_id()
+						require('telescope.builtin').find_files(getTelescopeOpts(state, path))
+					end,
+					telescope_grep = function(state)
+						local node = state.tree:get_node()
+						local path = node:get_id()
+						require('telescope.builtin').live_grep(getTelescopeOpts(state, path))
+					end,
+				},
 				window = {
 					position = "left",
-					width = 40,
+					width = 45,
 					mapping_options = {
 						noremap = true,
 						nowait = true,
@@ -188,7 +234,7 @@ return {
 				nesting_rules = {},
 				filesystem = {
 					filtered_items = {
-						visible = false, -- when true, they will just be displayed differently than normal items
+						visible = true, -- when true, they will just be displayed differently than normal items
 						hide_dotfiles = false,
 						hide_gitignored = false,
 						hide_hidden = false, -- only works on Windows for hidden files/directories
@@ -204,7 +250,8 @@ return {
 						},
 						never_show = { -- remains hidden even if visible is toggled to true, this overrides always_show
 							".DS_Store",
-							"thumbs.db"
+							"thumbs.db",
+							".git",
 						},
 						never_show_by_pattern = { -- uses glob style patterns
 							--".null-ls_*",
@@ -221,7 +268,7 @@ return {
 					-- "open_current",  -- netrw disabled, opening a directory opens within the
 					-- window like netrw would, regardless of window.position
 					-- "disabled",    -- netrw left alone, neo-tree does not handle opening dirs
-					use_libuv_file_watcher = true, -- This will use the OS level file watchers to detect changes
+					use_libuv_file_watcher = false, -- This will use the OS level file watchers to detect changes
 					-- instead of relying on nvim autocmd events.
 					window = {
 						mappings = {
@@ -230,8 +277,7 @@ return {
 							["H"] = "toggle_hidden",
 							["/"] = "fuzzy_finder",
 							["D"] = "fuzzy_finder_directory",
-							["#"] = "fuzzy_sorter", -- fuzzy sorting using the fzy algorithm
-							-- ["D"] = "fuzzy_sorter_directory",
+							["#"] = "fuzzy_sorter",
 							["f"] = "filter_on_submit",
 							["<c-x>"] = "clear_filter",
 							["[g"] = "prev_git_modified",
@@ -244,6 +290,9 @@ return {
 							["on"] = { "order_by_name", nowait = false },
 							["os"] = { "order_by_size", nowait = false },
 							["ot"] = { "order_by_type", nowait = false },
+							["O"] = "system_open",
+							["tf"] = "telescope_find",
+							["tg"] = "telescope_grep",
 						},
 						fuzzy_finder_mappings = { -- define keymaps for filter popup window in fuzzy_finder_mode
 							["<down>"] = "move_cursor_down",
@@ -257,7 +306,7 @@ return {
 				},
 				buffers = {
 					follow_current_file = {
-						enabled = true, -- This will find and focus the file in the active buffer every time
+						enabled = false, -- This will find and focus the file in the active buffer every time
 						--              -- the current file is changed while the tree is open.
 						leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
 					},
@@ -269,12 +318,6 @@ return {
 							["<bs>"] = "navigate_up",
 							["."] = "set_root",
 							["o"] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
-							["oc"] = { "order_by_created", nowait = false },
-							["od"] = { "order_by_diagnostics", nowait = false },
-							["om"] = { "order_by_modified", nowait = false },
-							["on"] = { "order_by_name", nowait = false },
-							["os"] = { "order_by_size", nowait = false },
-							["ot"] = { "order_by_type", nowait = false },
 						}
 					},
 				},
@@ -290,24 +333,12 @@ return {
 							["gp"] = "git_push",
 							["gg"] = "git_commit_and_push",
 							["o"]  = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
-							["oc"] = { "order_by_created", nowait = false },
-							["od"] = { "order_by_diagnostics", nowait = false },
-							["om"] = { "order_by_modified", nowait = false },
-							["on"] = { "order_by_name", nowait = false },
-							["os"] = { "order_by_size", nowait = false },
-							["ot"] = { "order_by_type", nowait = false },
 						}
 					}
 				}
 			})
 
 			vim.cmd([[nnoremap \ :Neotree reveal<cr>]])
-			require("helpers.keys").map(
-				{ "n", "v" },
-				"<leader>e",
-				"<cmd>NeoTreeRevealToggle<cr>",
-				"Toggle file explorer"
-			)
 		end,
 	},
 }

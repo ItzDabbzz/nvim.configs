@@ -1,9 +1,13 @@
 return {
     "folke/edgy.nvim",
+    dependencies = {
+        'simrat39/symbols-outline.nvim'
+    },
     event = "VeryLazy",
     init = function()
         vim.opt.laststatus = 3
         vim.opt.splitkeep = "screen"
+        require("symbols-outline").setup()
     end,
     opts = {
         bottom = {
@@ -25,7 +29,10 @@ return {
                 end,
             },
             "Trouble",
-            { ft = "qf",            title = "QuickFix" },
+            {
+                ft = "qf",
+                title = "QuickFix"
+            },
             {
                 ft = "help",
                 size = { height = 20 },

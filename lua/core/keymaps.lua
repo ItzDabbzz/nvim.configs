@@ -3,8 +3,6 @@ local map = require("helpers.keys").map
 -- Blazingly fast way out of insert mode
 map("i", "jk", "<esc>")
 
-map("n", "<leader>?", "<CMD>Cheatsheet<CR>", "Cheatsheet")
-
 -- Quick access to some common actions
 map("n", "<leader>fw", "<cmd>w<cr>", "Write")
 map("n", "<leader>fa", "<cmd>wa<cr>", "Write all")
@@ -13,7 +11,7 @@ map("n", "<leader>qa", "<cmd>qa!<cr>", "Quit all")
 map("n", "<leader>dw", "<cmd>close<cr>", "Window")
 
 -- Diagnostic keymaps
-map('n', 'gx', vim.diagnostic.open_float, "Show diagnostics under cursor")
+map('n', 'bx', vim.diagnostic.open_float, "Show diagnostics under cursor")
 
 -- Easier access to beginning and end of lines
 map("n", "<M-h>", "^", "Go to beginning of line")
@@ -63,29 +61,13 @@ end, "Toggle between light and dark themes")
 -- Clear after search
 map("n", "<leader>ur", "<cmd>nohl<CR>", "Clear highlights")
 
+-- Undotree Toggle
+map("n", "<leader>ut", "<cmd>UndotreeToggle<cr>", "Toggle undo tree")
 
-map("n", "<leader>mdp", "<cmd>MarkdownPreview<CR>", "Markdown Preview")
-map("n", "<leader>mdps", "<cmd>MarkdownPreviewStop<CR>", "Markdown Preview Stop")
-
-map("n", "<leader>cp", "<cmd>Colortils picker<CR>", "Color Picker")
-map("n", "<leader>cpr", "<cmd>Colortils picker rgb<CR>", "Color Picker RGB")
-map("n", "<leader>cpra", "<cmd>Colortils picker<CR>", "Color Picker RGBA")
-map("n", "<leader>cph", "<cmd>Colortils picker hex<CR>", "Color Picker Hex")
-map("n", "<leader>cphs", "<cmd>Colortils picker hsl<CR>", "Color Picker hsl")
-map("n", "<leader>cphsa", "<cmd>Colortils picker hsla<CR>", "Color Picker hsla")
-
--- terminal
-map("t", "<Esc>", "<C-\\><C-n>")
-map("t", "<C-w>", "<C-\\><C-n><C-w>")
-
-map("n", "]t", function ()
-	require("todo-comments").jump_next()
-end, "Jump Next Todo")
-
-map("n", "[t", function ()
-	require("todo-comments").jump_prev()
-end, "Jump Prev Todo")
-
-map("n", "<leader>qs", [[<CMD>lua require("persistence").load()<CR>]], "Restore Session For Current Directory")
-map("n", "<leader>ql", [[<cmd>lua require("persistence").load({ last = true })<cr>]], "Restore Last Session")
-map("n", "<leader>qd", [[<cmd>lua require("persistence").stop()<cr>]], "Stop Persistence to not save")
+-- Neotree Toggle
+map(
+	{ "n", "v" },
+	"<leader>ue",
+	"<cmd>Neotree toggle<cr>",
+	"Toggle file explorer"
+)

@@ -8,7 +8,7 @@ return {
 				{
 					["<leader>"] = {
 						f = { name = "File" },
-						d = { name = "Delete/Close" },
+						d = { name = "Delete/Close/Buffers" },
 						q = { name = "Quit" },
 						s = { name = "Search" },
 						l = { name = "LSP" },

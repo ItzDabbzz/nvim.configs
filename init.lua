@@ -5,10 +5,4 @@ require("core.lazy")
 require("core.keymaps")
 
 -- Other options
-require("core.options")
-
--- Commander Setup
-require("core.commander-setup")
-
--- Configure Plugins
-require("core.configure")
+require("core.opts")

@@ -44,6 +44,10 @@ return {
 			  lualine_b = { 'filename', 'branch' },
 			  lualine_c = {
 				'%=', --[[ add your center compoentnts here in place of this comment ]]
+				'diff',
+				'diagnostics',
+				"os.date('%a %b %d | %I:%M')",
+				"require'lsp-status'.status()",
 			  },
 			  lualine_x = {},
 			  lualine_y = { 'filetype', 'progress' },
@@ -60,7 +64,14 @@ return {
 			  lualine_z = { 'location' },
 			},
 			tabline = {},
-			extensions = {},
+			extensions = {
+				'lazy',
+				'mason',
+				'neo-tree',
+				'nvim-dap-ui',
+				'toggleterm',
+				'trouble'
+			},
 		  }
 	end,
 }

@@ -42,15 +42,15 @@ return {
 					previewer = false,
 				}))
 			end, "Search in current buffer")
-			map("n", "<leader>tslf", "<cmd>Telescope software-licenses find<CR>", "Find Software Licenses Via Telescope")
-			map("n", "<leader>tef", "<cmd>Telescope emoji<CR>", "Find Emoji Via Telescope")
+			map("n", "<leader>slf", "<cmd>Telescope software-licenses find<CR>", "Find Software Licenses Via Telescope")
+			map("n", "<leader>se", "<cmd>Telescope emoji<CR>", "Find Emoji Via Telescope")
 			map("n", "<leader>sf", require("telescope.builtin").find_files, "Files")
 			map("n", "<leader>sh", require("telescope.builtin").help_tags, "Help")
 			map("n", "<leader>sw", require("telescope.builtin").grep_string, "Current word")
 			map("n", "<leader>sg", require("telescope.builtin").live_grep, "Grep")
 			map("n", "<leader>sd", require("telescope.builtin").diagnostics, "Diagnostics")
 			map("n", "<C-p>", require("telescope.builtin").keymaps, "Search keymaps")
-			map("n", "<leader>u", "<CMD>Telescope undo<CR>", "Telescope Undo")
+			map("n", "<leader>su", "<CMD>Telescope undo<CR>", "Telescope Undo")
 		end,
 	},
 }

@@ -1,10 +1,14 @@
+local function list(items, sep)
+    return table.concat(items, sep or ",")
+end
+
 local opts = {
 	-- automatically write file if changed
 	autowrite = true,
 	-- used for highlight colors
 	background = "dark",
 	-- keep backup file after overwriting a file
-	backup = true,
+	backup = false,
 	-- how backspace works at the start of a line
 	backspace = "indent,eol,start",
 	-- characters that may cause a line break
@@ -12,9 +16,9 @@ local opts = {
 	-- wrapped line repeats indent
 	breakindent = true,
 	-- number of lines to use for the command-line
-	cmdheigh = 1,
+	cmdheight = 1,
 	-- height of the command-line window
-	cmdminheight = 5,
+	cmdwinheight = 5,
 	-- columns to highlight
 	colorcolumn = "110",
 	-- specify how Insert mode completion works
@@ -35,12 +39,24 @@ local opts = {
 	equalalways = false,
 	-- file encoding for multibyte text
 	fileencoding = "utf-8",
+    -- options for 'filetype'
+    fillchars = list {
+        -- "vert:▏",
+        "vert:│",
+        "diff:╱",
+        "foldclose:",
+        "foldopen:",
+        "fold: ",
+        "msgsep:─",
+    },
 	-- set to display all folds open
 	foldenable = true,
 	-- close folds with a level higher than this
 	foldlevel = 99,
 	-- 'foldlevel' when starting to edit a file
 	foldlevelstart = 99,
+    -- 0 is not bad
+    foldcolumn = '1',
 	-- format of 'grepprg' output
 	grepformat = "%f:%l:%m,%m\\ %f\\ match%ts,%f",
 	-- program to use fro ":grep"
@@ -132,7 +148,7 @@ local opts = {
 	-- 
 	termguicolors = true,
 	-- max width of text that is being inserted
-	textwidth = 120,
+	textwidth = 160,
 	-- time out on mappins and keycodes
 	timeout = true,
 	-- time out time in milliseconds
@@ -166,13 +182,17 @@ local opts = {
 	-- searches wrap around the end of the file
 	wrapscan = true,
 	-- make a backup before overwriting a file
-	writebackup = true
+	writebackup = false
 }
 
 -- Set options from table
 for opt, val in pairs(opts) do
-	vim.o[opt] = val
+	vim.opt[opt] = val
 end
+
+
+vim.opt.guicursor:append("a:blinkwait100-blinkoff700-blinkon700")
+vim.cmd([[autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o]])
 
 -- Set other options
 local colorscheme = require("helpers.colorscheme")
