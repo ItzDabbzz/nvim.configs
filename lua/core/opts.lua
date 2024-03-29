@@ -102,7 +102,7 @@ local opts = {
 	-- ?
 	pumheight = 12,
 	-- timeout for 'hlsearch' and :match highlighting
-	redrawtime = 100,
+	redrawtime = 50,
 	-- show realative line number in front of each line
 	relativenumber = false,
 	-- show cursor line and column in the status line
