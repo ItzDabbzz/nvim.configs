@@ -29,4 +29,7 @@ lazy.setup("plugins")
 
 require("helpers.keys").map("n", "<leader>L", lazy.show, "Show Lazy")
 
+require 'nvim-treesitter.install'.compilers = { "clang", "zig"}
+require 'nvim-treesitter.install'.prefer_git = false
 require("core.configure.bufferline")
+require("core.configure.misc")

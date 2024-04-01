@@ -13,7 +13,7 @@ return {
 			{ "cljoly/telescope-repo.nvim" },
 			{ 'ghassan0/telescope-glyph.nvim' },
 			-- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
-			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make", cond = vim.fn.executable("make") == 1 },
+			{ 'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' },
 			{ "OliverChao/telescope-picker-list.nvim" },
 			{
 				"agoodshort/telescope-git-submodules.nvim",
@@ -164,7 +164,7 @@ return {
 			})
 
 			-- Enable telescope fzf native, if installed
-			--pcall(require("telescope").load_extension"fzf")
+			pcall(require("telescope").load_extension"fzf")
 			pcall(require("telescope").load_extension("software-licenses"))
 			pcall(require("telescope").load_extension("emoji"))
 			pcall(require("telescope").load_extension("lazy"))
