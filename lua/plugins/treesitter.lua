@@ -18,29 +18,18 @@ return {
     config = function()
         require('nvim-treesitter.configs').setup({
             -- A list of parser names, or "all"
-            ensure_installed = { "comment", "markdown_inline", "regex" },
+            ensure_installed = { "bash", "comment", "markdown", "markdown_inline", "regex", "lua", "astro", "javascript", "typescript", "tsx", "html", "json" },
             -- A list of paser names to ignore
             ignore_install = {},
 
-            sync_install = true,
-            auto_install = true,
+            sync_install = false,
+            auto_install = false,
             matchup = {
                 enable = false,
             },
             highlight = {
-                enable = false,
+                enable = true,
                 additional_vim_regex_highlighting = false,
-                disable = function(lang, buf)
-                    if vim.tbl_contains({ "latex" }, lang) then
-                        return true
-                    end
-
-                    local max_filesize = 1000 * 1024 -- 1000 KB
-                    local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-                    if ok and stats and stats.size > max_filesize then
-                        return true
-                    end
-                end,
             },
             context_commentstring = {
                 enable = true,
