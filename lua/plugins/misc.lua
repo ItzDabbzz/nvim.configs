@@ -133,5 +133,9 @@ return {
         config = function()
 
         end,
-    }
+    },
+    {
+        "ajeetdsouza/zoxide"
+    },
+    { 'wakatime/vim-wakatime', lazy = false }
 }
