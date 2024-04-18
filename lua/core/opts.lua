@@ -141,8 +141,6 @@ local opts = {
 	splitright = true,
 	-- commands move cursor to first non-blank in line
 	startofline = false,
-	-- sets behaviour when switching to another buffer
-	switchbuf = "useopen,usetab",
 	-- number of spaces that <Tab> in file uses
 	tabstop = 4,
 	-- 
