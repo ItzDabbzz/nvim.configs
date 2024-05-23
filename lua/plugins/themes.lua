@@ -1,51 +1,34 @@
--- Themes
 return {
-	{
-		"typicode/bg.nvim",
-		lazy = true,
-	},
+    {
+        --[[
+            https://github.com/2giosangmitom/nightfall.nvim
 
-	{
-		"ellisonleao/gruvbox.nvim",
-		lazy = true,
-	},
-
-	{
-		"catppuccin/nvim",
-		name = "catppuccin",
-		lazy = true,
-	},
-
-	{
-		"rose-pine/nvim",
-		name = "rose-pine",
-		lazy = true,
-	},
-
-	{
-		"sainnhe/everforest",
-		lazy = true,
-	},
-
-	{
-		"savq/melange-nvim",
-		lazy = true,
-	},
-
-	-- Kanagawa Theme
-	-- 3 Variants:
-	-- - wave - Heart warming sessions
-	-- - dragon - late night sessions
-	-- - lotus - when you're out in the open
-	-- require("kanagawa").load("wave")
-	-- https://github.com/rebelot/kanagawa.nvim
-	{
-		"rebelot/kanagawa.nvim",
-		lazy = true,
-	},
-
-	{
-		"EdenEast/nightfox.nvim",
-		lazy = true,
-	}
+        ]]
+        "2giosangmitom/nightfall.nvim",
+        lazy = false,
+        priority = 1000,
+        version = "*",
+        opts = {},
+      },
+      {
+        --[[
+            https://github.com/marko-cerovac/material.nvim
+            5 styles: darker, lighter, oceanic, palenight, deep ocean
+            --Lua:
+            vim.g.material_style = "deep ocean"
+        ]]
+        "marko-cerovac/material.nvim"
+      },
+      --[[
+        https://github.com/AlexvZyl/nordic.nvim
+        
+      ]]
+      {
+        'AlexvZyl/nordic.nvim',
+        lazy = false,
+        priority = 1000,
+        config = function()
+            require 'nordic' .load()
+        end
+    }
 }

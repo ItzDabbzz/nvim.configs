@@ -1,235 +1,264 @@
 return {
-    'neovim/nvim-lspconfig',
-    cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
-    event = { 'BufReadPre', 'BufNewFile' },
-    dependencies = {
-        { 'onsails/lspkind.nvim',              lazy = true },
-        { 'hrsh7th/cmp-nvim-lua',              lazy = true },
-        { 'hrsh7th/cmp-nvim-lsp',              lazy = true },
-        { 'hrsh7th/cmp-buffer',                lazy = true },
-        { 'hrsh7th/cmp-path',                  lazy = true },
-        { 'saadparwaiz1/cmp_luasnip',          lazy = true },
-        { 'williamboman/mason-lspconfig.nvim', lazy = true },
-        { "b0o/schemastore.nvim",              lazy = true },
-        {
-            "j-hui/fidget.nvim",
-            tag = "legacy",
-            event = "LspAttach",
-        },
-    },
-    config = function()
-        -- This is where all the LSP shenanigans will live
-        local lsp_zero = require('lsp-zero')
-        lsp_zero.extend_lspconfig()
-
-        --- if you want to know more about lsp-zero and mason.nvim
-        --- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/integrate-with-mason-nvim.md
-        lsp_zero.on_attach(function(client, bufnr)
-            -- see :help lsp-zero-keybindings
-            -- to learn the available actions
-            lsp_zero.default_keymaps({ buffer = bufnr })
-            require("illuminate").on_attach(client)
-        end)
-
-        local icons = require("helpers.icons")
-        lsp_zero.set_sign_icons({
-            error = icons.diagnostics.Error,
-            warn = icons.diagnostics.Warning,
-            hint = icons
-                .diagnostics.Hint,
-            info = icons.diagnostics.Information
-        })
-
-        -- TODO: Let which-key know about gq being format file
-        lsp_zero.format_mapping('gq', {
-            format_opts = {
-                async = false,
-                timeout_ms = 10000,
+    {
+        "neovim/nvim-lspconfig",
+        dependencies = {
+            "folke/neodev.nvim",
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+            "WhoIsSethDaniel/mason-tool-installer.nvim",
+            {
+                "j-hui/fidget.nvim",
+                event = "LspAttach",
             },
-            servers = {
-                ['tsserver'] = { 'javascript', 'typescript' },
-                ['rust_analyzer'] = { 'rust' },
-                ['lua_ls'] = { 'lua' },
-                ['prismals'] = { 'prisma' },
-                ['astro'] = { 'astro' }
-            }
-        })
-        lsp_zero.set_server_config({
-            capabilities = {
-                textDocument = {
-                    foldingRange = {
-                        dynamicRegistration = false,
-                        lineFoldingOnly = true
-                    }
-                }
-            }
-        })
+            -- Autoformatting
+            "stevearc/conform.nvim",
+            -- Schema information
+            "b0o/SchemaStore.nvim",
+            "SmiteshP/nvim-navic",
+        },
+        config = function()
+            require("neodev").setup({})
 
-        require('mason').setup({})
+            local yamlCfg = require("yaml-companion").setup({
+                -- Add any options here, or leave empty to use the default settings
+                -- lspconfig = {
+                --   cmd = {"yaml-language-server"}
+                -- },
+              })
 
-        require('mason-lspconfig').setup({
-            ensure_installed = { "astro", "cssls", "dockerls", "docker_compose_language_service", "gradle_ls", "gopls", "jdtls", "tsserver", "lua_ls", "markdown_oxide", "powershell_es", "prismals", "rust_analyzer", "sqlls", "taplo", "tailwindcss", "hydra_lsp", "zls" },
-            handlers = {
-                lsp_zero.default_setup,
-                astro = function()
-                    require('lspconfig').astro.setup({})
-                end,
-                cssls = function()
-                    require('lspconfig').cssls.setup({})
-                end,
-                dockerls = function()
-                    require('lspconfig').dockerls.setup({})
-                end,
-                docker_compose_language_service = function()
-                    require('lspconfig').docker_compose_language_service.setup({})
-                end,
-                gradle_ls = function()
-                    require('lspconfig').gradle_ls.setup({})
-                end,
-                gopls = function()
-                    require('lspconfig').gopls.setup({})
-                end,
-                jsonls = function()
-                    require('lspconfig').jsonls.setup {
-                        settings = {
-                            json = {
-                                schemas = require('schemastore').json.schemas(),
-                                validate = { enable = true },
-                            },
-                            yaml = {
-                                schemaStore = {
-                                    -- You must disable built-in schemaStore support if you want to use
-                                    -- this plugin and its advanced options like `ignore`.
-                                    enable = false,
-                                    -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
-                                    url = "",
-                                },
-                                schemas = require('schemastore').yaml.schemas(),
+            local capabilities = nil
+            if pcall(require, "cmp_nvim_lsp") then
+                capabilities = require("cmp_nvim_lsp").default_capabilities()
+            end
+            local lspconfig = require 'lspconfig'
+            local servers = {
+                astro = true,
+                bashls = true,
+                dockerls = true,
+                docker_compose_language_service = true,
+                gradle_ls = true,
+                gopls = true,
+                jsonls = {
+                    settings = {
+                        json = {
+                            schemas = require('schemastore').json.schemas(),
+                            validate = { enable = true },
+                        },
+                    },
+                    setup = {
+                        commands = {
+                            Format = {
+                                function()
+                                    vim.lsp.buf.range_formatting({}, { 0, 0 }, { vim.fn.line "$", 0 })
+                                end,
                             },
                         },
-                        setup = {
-                            commands = {
-                                Format = {
-                                    function()
-                                        vim.lsp.buf.range_formatting({}, { 0, 0 }, { vim.fn.line "$", 0 })
-                                    end,
-                                },
-                            },
+                    },
+                },
+                lua_ls = {
+                    diagnostics = {
+                        globals = {
+                            "vim",
+                            'require'
+                        }
+                    },
+                    runtime = {
+                        path = {
+                            "",
+                            ".\\?.lua",
+                            "C:\\Tools\\neovim\\nvim-win64\\bin\\lua\\?.lua",
+                            "C:\\Tools\\neovim\\nvim-win64\\bin\\lua\\?\\init.lua",
+                            "C:\\Dev\\Lua\\5.1\\lua\\?.luac",
+                            "lua/?.lua",
+                            "lua/?/init.lua"
                         },
-                    }
-                end,
-                jdtls = function()
-                    require('lspconfig').jdtls.setup({})
-                end,
-                tsserver = function()
-                    require('lspconfig').tsserver.setup({})
-                end,
-                lua_ls = function()
-                    local lua_opts = lsp_zero.nvim_lua_ls()
-                    local opts = {
-                        diagnostics = {
-                            globals = { "vim" }
-                        },
-                        runtime = {
-                            path = {
-                                "",
-                                ".\\?.lua",
-                                "C:\\Tools\\neovim\\nvim-win64\\bin\\lua\\?.lua",
-                                "C:\\Tools\\neovim\\nvim-win64\\bin\\lua\\?\\init.lua",
-                                "C:\\Dev\\Lua\\5.1\\lua\\?.luac",
-                                "lua/?.lua",
-                                "lua/?/init.lua"
-                            },
-                            version = "LuaJIT"
-                        },
-                        telemetry = {
-                            enable = false
-                        },
-                        workspace = {
-                            checkThirdParty = false,
-                            library = {
-                                "C:\\Tools\\neovim\\nvim-win64\\share\\nvim\\runtime\\lua",
-                                "C:\\Users\\Davin\\AppData\\Local\\nvim\\lua",
-                                "C:\\Dev\\Lua\\lls-addons"
-                            }
+                        version = "LuaJIT"
+                    },
+                    telemetry = {
+                        enable = false
+                    },
+                    workspace = {
+                        checkThirdParty = false,
+                        library = {
+                            "C:\\Tools\\neovim\\nvim-win64\\share\\nvim\\runtime\\lua",
+                            "C:\\Users\\Davin\\AppData\\Local\\nvim\\lua",
+                            "C:\\Dev\\Lua\\lls-addons",
+                            vim.api.nvim_get_runtime_file("", true)
                         }
                     }
-                    require('lspconfig').lua_ls.setup(opts)
-                end,
-                markdown_oxide = function()
-                    require('lspconfig').markdown_oxide.setup({})
-                end,
-                powershell_es = function()
-                    require('lspconfig').powershell_es.setup({})
-                end,
-                prismals = function()
-                    require('lspconfig').prismals.setup({})
-                end,
-                rust_analyzer = function()
-                    require('lspconfig').rust_analyzer.setup({})
-                end,
-                sqlls = function()
-                    require('lspconfig').sqlls.setup({})
-                end,
-                taplo = function()
-                    require('lspconfig').taplo.setup({})
-                end,
-                tailwindcss = function()
-                    require('lspconfig').tailwindcss.setup({})
-                end,
-                hydra_lsp = function()
-                    require('lspconfig').hydra_lsp.setup({})
-                end,
-                zls = function()
-                    require('lspconfig').zls.setup({})
-                end,
-            },
-        })
-
-
-        -- Turn on LSP status information
-        require("fidget").setup({
-            progress = {
-                poll_rate = 0,
-                suppress_on_insert = false,
-                ignore_done_already = false,
-                ignore_empty_message = false,
-                clear_on_deatch = function(client_id)
-                    local client = vim.lsp.get_client_by_id(client_id)
-                    return client and client.name or nil
-                end,
-                notification_group = function(msg)
-                    return msg.lsp_client.name
-                end,
-                ignore = {}, -- List of LSP servers to ignore
-                display = {
-                    render_limit = 16,
-                    done_ttl = 4,
-                    done_icon = "",
-                    done_style = "Constant",
-                    progress_ttl = math.huge,
-                    progress_icon = { pattern = "dots", period = 2 },
-                    progress_style = "WarningMsg",
-                    group_style = "Title",
-                    icon_style = "Question",
-                    priority = 30,
-                    skip_history = true,
                 },
-            },
-
-            notification = {
-                filter = vim.log.levels.DEBUG,
-                history_size = 256,
-                override_vim_notify = true,
-            },
-
-
-
-            integration = {
-                ["neo-tree"] = {
-                    enable = true,
-                }
+                rust_analyzer = true,
+                templ = true,
+                cssls = true,
+                tsserver = true,
+                yamlls = true,
             }
-        })
-    end
+
+            local servers_to_install = vim.tbl_filter(function(key)
+                local t = servers[key]
+                if type(t) == "table" then
+                    return t.manual_install
+                else
+                    return t
+                end
+            end, vim.tbl_keys(servers))
+
+            require("mason").setup()
+            local ensure_installed = {
+                "stylua",
+                "lua_ls",
+                "delve",
+            }
+
+            vim.list_extend(ensure_installed, servers_to_install)
+            require("mason-tool-installer").setup { ensure_installed = ensure_installed }
+
+            for name, config in pairs(servers) do
+                if config == true then
+                    config = {}
+                end
+                config = vim.tbl_deep_extend("force", {}, {
+                    capabilities = capabilities,
+                }, config)
+
+                lspconfig[name].setup(config)
+            end
+
+            local disable_semantic_tokens = {
+                lua = true,
+            }
+            vim.api.nvim_create_autocmd("LspAttach", {
+                callback = function(args)
+                    local bufnr = args.buf
+                    local client = assert(vim.lsp.get_client_by_id(args.data.client_id), "must have valid client")
+
+                    vim.opt_local.omnifunc = "v:lua.vim.lsp.omnifunc"
+                    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = 0 })
+                    vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = 0 })
+                    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = 0 })
+                    vim.keymap.set("n", "gT", vim.lsp.buf.type_definition, { buffer = 0 })
+                    vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = 0 })
+
+                    vim.keymap.set("n", "<space>cr", vim.lsp.buf.rename, { buffer = 0 })
+                    vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, { buffer = 0 })
+
+                    local filetype = vim.bo[bufnr].filetype
+                    if disable_semantic_tokens[filetype] then
+                        client.server_capabilities.semanticTokensProvider = nil
+                    end
+                end,
+            })
+
+            require("lspconfig")["yamlls"].setup(yamlCfg)
+
+            -- Autoformatting Setup
+            require("conform").setup {
+                formatters_by_ft = {
+                    lua = { "stylua" },
+                },
+            }
+
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                callback = function(args)
+                    require("conform").format {
+                        bufnr = args.buf,
+                        lsp_fallback = true,
+                        quiet = true,
+                    }
+                end,
+            })
+
+            require("fidget").setup({
+                progress = {
+                    poll_rate = 0,
+                    suppress_on_insert = false,
+                    ignore_done_already = false,
+                    ignore_empty_message = false,
+                    clear_on_deatch = function(client_id)
+                        local client = vim.lsp.get_client_by_id(client_id)
+                        return client and client.name or nil
+                    end,
+                    notification_group = function(msg)
+                        return msg.lsp_client.name
+                    end,
+                    ignore = {}, -- List of LSP servers to ignore
+                    display = {
+                        render_limit = 16,
+                        done_ttl = 4,
+                        done_icon = "",
+                        done_style = "Constant",
+                        progress_ttl = math.huge,
+                        progress_icon = { pattern = "dots", period = 2 },
+                        progress_style = "WarningMsg",
+                        group_style = "Title",
+                        icon_style = "Question",
+                        priority = 30,
+                        skip_history = true,
+                    },
+                },
+                notification = {
+                    filter = vim.log.levels.DEBUG,
+                    history_size = 256,
+                    override_vim_notify = true,
+                },
+                integration = {
+                    ["neo-tree"] = {
+                        enable = true,
+                    }
+                }
+            })
+            local navic = require("nvim-navic")
+
+            navic.setup {
+                icons = {
+                  File = ' ',
+                  Module = ' ',
+                  Namespace = ' ',
+                  Package = ' ',
+                  Class = ' ',
+                  Method = ' ',
+                  Property = ' ',
+                  Field = ' ',
+                  Constructor = ' ',
+                  Enum = ' ',
+                  Interface = ' ',
+                  Function = ' ',
+                  Variable = ' ',
+                  Constant = ' ',
+                  String = ' ',
+                  Number = ' ',
+                  Boolean = ' ',
+                  Array = ' ',
+                  Object = ' ',
+                  Key = ' ',
+                  Null = ' ',
+                  EnumMember = ' ',
+                  Struct = ' ',
+                  Event = ' ',
+                  Operator = ' ',
+                  TypeParameter = ' '
+                },
+                lsp = {
+                    auto_attach = true,
+                    preference = nil,
+                },
+                highlight = false,
+                separator = " > ",
+                depth_limit = 0,
+                depth_limit_indicator = "..",
+                safe_output = true,
+                lazy_update_context = false,
+                click = false,
+                format_text = function(text)
+                    return text
+                end,
+              }
+
+            require("lspconfig").clangd.setup {
+                on_attach = function(client, bufnr)
+                    navic.attach(client, bufnr)
+                end
+            }
+        end,
+    }
 }
