@@ -1,0 +1,44 @@
+{
+    "contributes": {
+        "snippets": [
+            {
+                "language": [
+                    "javascript",
+                    "typescript"
+                ],
+                "path": "./javascript/javascript.json"
+            },
+            {
+                "language": "all",
+                "path": "./global.json"
+            },
+            {
+                "language": [
+                    "java"
+                ],
+                "path": [
+                    "./java.json"
+                ]
+            },
+            {
+                "language": [
+                    "sql"
+                ],
+                "path": "./sql.json"
+            },
+            {
+                "language": [
+                    "lua"
+                ],
+                "path": "./lua.json"
+            },
+            {
+                "language": [
+                    "lua"
+                ],
+                "path": "./luadoc.json"
+            }
+        ]
+    },
+    "name": "personal-snips"
+}
