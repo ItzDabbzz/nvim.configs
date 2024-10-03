@@ -19,7 +19,7 @@ if not ok then
 end
 
 -- We have to set the leader key here for lazy.nvim to work
-require("utils.keybinds").set_leader(" ")
+require("helpers.keys").set_leader(" ")
 
 -- Load plugins from specifications
 -- (The leader key must be set before this)
@@ -29,7 +29,9 @@ lazy.setup({ import = "plugins" }, {
 	},
 })
 
-require("utils.keybinds").map("n", "<leader>L", lazy.show, "Show Lazy")
+-- Might as well set up an easy-access keybinding
+
+require("helpers.keys").map("n", "<leader>L", lazy.show, "Show Lazy")
 
 require("nvim-treesitter.install").compilers = { "clang", "zig" }
 require("nvim-treesitter.install").prefer_git = false

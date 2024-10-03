@@ -1,5 +1,5 @@
 local wk = require("which-key")
-local icons = require("utils.icons")
+local icons = require("helpers.icons")
 wk.setup({
 	plugins = {
 		marks = true, -- shows a list of your marks on ' and `
@@ -82,7 +82,7 @@ wk.setup({
 		filetypes = { "TelescopePrompt" },
 	},
 })
-local buffers = require("utils.buffers")
+local buffers = require("helpers.buffers")
 local dap = require("dap")
 local ui = require("dapui")
 local function dap_start_debugging()
@@ -104,12 +104,12 @@ local function dap_end_debug()
 		require("notify")("Debugger session ended", "warn")
 	end)
 end
-local tm = require("utils.termmanager")
+local tm = require("helpers.termmanager")
 wk.register({
 	["<leader>"] = {
 		h = {
-			a = { "Harboon List Add" },
-			o = { "Harboon List Open" },
+			a     = { "Harboon List Add" },
+			o     = { "Harboon List Open" },
 			["1"] = { "Harboon List 1" },
 			["2"] = { "Harboon List 2" },
 			["3"] = { "Harboon List 3" },
@@ -118,124 +118,124 @@ wk.register({
 		},
 		d = {
 			name = "Dap",
-			t = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>", "Toggle Breakpoint" },
-			b = { "<cmd>lua require'dap'.step_back()<cr>", "Step Back" },
-			c = { "<cmd>lua require'dap'.continue()<cr>", "Continue" },
-			C = { dap_clear_breakpoints, "Clear Breakpoints" },
-			R = { "<cmd>lua require'dap'.run_to_cursor()<cr>", "Run To Cursor" },
-			d = { "<cmd>lua require'dap'.disconnect()<cr>", "Disconnect" },
-			g = { "<cmd>lua require'dap'.session()<cr>", "Get Session" },
-			i = { "<cmd>lua require'dap'.step_into()<cr>", "Step Into" },
-			I = { "<CMD>lua require'dap.ui.widgets' .hover()<CR>", "Info" },
-			o = { "<cmd>lua require'dap'.step_over()<cr>", "Step Over" },
-			u = { "<cmd>lua require'dap'.step_out()<cr>", "Step Out" },
-			p = { "<cmd>lua require'dap'.pause()<cr>", "Pause" },
-			r = { "<cmd>lua require'dap'.repl.toggle()<cr>", "Toggle Repl" },
-			s = { dap_start_debugging, "Start" },
-			q = { dap_end_debug, "Quit" },
-			U = { "<cmd>lua require'dapui'.toggle({reset = true})<cr>", "Toggle UI" },
+			t    = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>", "Toggle Breakpoint" },
+			b    = { "<cmd>lua require'dap'.step_back()<cr>", "Step Back" },
+			c    = { "<cmd>lua require'dap'.continue()<cr>", "Continue" },
+			C    = { dap_clear_breakpoints, "Clear Breakpoints" },
+			R    = { "<cmd>lua require'dap'.run_to_cursor()<cr>", "Run To Cursor" },
+			d    = { "<cmd>lua require'dap'.disconnect()<cr>", "Disconnect" },
+			g    = { "<cmd>lua require'dap'.session()<cr>", "Get Session" },
+			i    = { "<cmd>lua require'dap'.step_into()<cr>", "Step Into" },
+			I    = { "<CMD>lua require'dap.ui.widgets' .hover()<CR>", "Info" },
+			o    = { "<cmd>lua require'dap'.step_over()<cr>", "Step Over" },
+			u    = { "<cmd>lua require'dap'.step_out()<cr>", "Step Out" },
+			p    = { "<cmd>lua require'dap'.pause()<cr>", "Pause" },
+			r    = { "<cmd>lua require'dap'.repl.toggle()<cr>", "Toggle Repl" },
+			s    = { dap_start_debugging, "Start" },
+			q    = { dap_end_debug, "Quit" },
+			U    = { "<cmd>lua require'dapui'.toggle({reset = true})<cr>", "Toggle UI" },
 		},
 		b = {
 			name = "Delete/Close/Buffers",
-			a = { buffers.delete_this, "Current buffer" },
-			o = { buffers.delete_others, "Other buffers" },
-			d = { buffers.delete_all, "All buffers" },
-			w = { "<CMD>close<CR>", "Window" },
+			a    = { buffers.delete_this, "Current buffer" },
+			o    = { buffers.delete_others, "Other buffers" },
+			d    = { buffers.delete_all, "All buffers" },
+			w    = { "<CMD>close<CR>", "Window" },
 		},
 		f = {
 			name = "Files",
-			w = { "<CMD>w<CR>", "Write" },
-			W = { "<CMD>wa<CR>", "Write all" },
+			w    = { "<CMD>w<CR>", "Write" },
+			W    = { "<CMD>wa<CR>", "Write all" },
 		},
 		g = {
 			name = "Git",
-			a = { "<CMD>git add %<CR>", "Stage the current file" },
-			B = { "<CMD>Git blame<CR>", "Git Blame" },
-			b = { "<CMD>Telescope git_branches<CR>", "Git Branches" },
-			c = { "<CMD>Telescope git_commits<CR>", "Git Commits (Repository)" },
-			C = { "<CMD>Telescope git_bcommits<CR>", "Git Commits (Current File)" },
-			S = { "<CMD>Telescope git_status<CR>", "Git Status" },
-			z = {
+			a    = { "<CMD>git add %<CR>", "Stage the current file" },
+			B    = { "<CMD>Git blame<CR>", "Git Blame" },
+			b    = { "<CMD>Telescope git_branches<CR>", "Git Branches" },
+			c    = { "<CMD>Telescope git_commits<CR>", "Git Commits (Repository)" },
+			C    = { "<CMD>Telescope git_bcommits<CR>", "Git Commits (Current File)" },
+			S    = { "<CMD>Telescope git_status<CR>", "Git Status" },
+			z    = {
 				name = "Git-Conflict.nvim",
-				o = { "<Plug>(git-conflict-ours)", "Ours" },
-				t = { "<Plug>(git-conflict-theirs)", "Theirs" },
-				b = { "<Plug>(git-conflict-both)", "Both" },
-				n = { "<Plug>(git-conflict-next-conflict)", "Next Conflict" },
-				p = { "<Plug>(git-conflict-prev-conflict)", "Prev Conflict" },
-				l = { "<Plug>(git-conflict-none)", "None" },
+				o    = { "<Plug>(git-conflict-ours)", "Ours" },
+				t    = { "<Plug>(git-conflict-theirs)", "Theirs" },
+				b    = { "<Plug>(git-conflict-both)", "Both" },
+				n    = { "<Plug>(git-conflict-next-conflict)", "Next Conflict" },
+				p    = { "<Plug>(git-conflict-prev-conflict)", "Prev Conflict" },
+				l    = { "<Plug>(git-conflict-none)", "None" },
 			},
 			p = { "<CMD>Git push<CR>", "Git Push" },
 			s = {
 				name = "Git-Signs",
-				j = { "<cmd>lua require 'gitsigns'.next_hunk({navigation_message = false})<cr>", "Next Hunk" },
-				k = { "<cmd>lua require 'gitsigns'.prev_hunk({navigation_message = false})<cr>", "Prev Hunk" },
-				l = { "<cmd>lua require 'gitsigns'.blame_line()<cr>", "Blame" },
-				p = { "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", "Preview Hunk" },
-				r = { "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", "Reset Hunk" },
-				R = { "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", "Reset Buffer" },
-				s = { "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", "Stage Hunk" },
-				u = { "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", "Undo Stage Hunk" },
-				o = { "<cmd>Telescope git_status<cr>", "Open changed file" },
-				b = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
-				c = { "<cmd>Telescope git_commits<cr>", "Checkout commit" },
-				C = { "<cmd>Telescope git_bcommits<cr>", "Checkout commit(for current file)" },
-				d = { "<cmd>Gitsigns diffthis HEAD<cr>", "Git Diff" },
-				z = { "<CMD>Gitsigns toggle_signs<CR>", "Toggle Signs" },
-				h = { "<CMD>Gitsigns toggle_linehl<CR>", "Toggle Line Highlight" },
-				H = { "<CMD>Gitsigns toggle_numhl<CR>", "Toggle Number Highlight" },
-				x = { "<CMD>Gitsigns toggle_deleted<CR>", "Toggle Deleted" },
-				t = { "<CMD>Gitsigns toggle_current_line_blame<CR>", "Toggle Count" },
-				w = { "<CMD>Gitsigns toggle_word_diff<CR>", "Toggle Word Diff" },
+				j    = { "<cmd>lua require 'gitsigns'.next_hunk({navigation_message = false})<cr>", "Next Hunk" },
+				k    = { "<cmd>lua require 'gitsigns'.prev_hunk({navigation_message = false})<cr>", "Prev Hunk" },
+				l    = { "<cmd>lua require 'gitsigns'.blame_line()<cr>", "Blame" },
+				p    = { "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", "Preview Hunk" },
+				r    = { "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", "Reset Hunk" },
+				R    = { "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", "Reset Buffer" },
+				s    = { "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", "Stage Hunk" },
+				u    = { "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", "Undo Stage Hunk" },
+				o    = { "<cmd>Telescope git_status<cr>", "Open changed file" },
+				b    = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
+				c    = { "<cmd>Telescope git_commits<cr>", "Checkout commit" },
+				C    = { "<cmd>Telescope git_bcommits<cr>", "Checkout commit(for current file)" },
+				d    = { "<cmd>Gitsigns diffthis HEAD<cr>", "Git Diff" },
+				z    = { "<CMD>Gitsigns toggle_signs<CR>", "Toggle Signs" },
+				h    = { "<CMD>Gitsigns toggle_linehl<CR>", "Toggle Line Highlight" },
+				H    = { "<CMD>Gitsigns toggle_numhl<CR>", "Toggle Number Highlight" },
+				x    = { "<CMD>Gitsigns toggle_deleted<CR>", "Toggle Deleted" },
+				t    = { "<CMD>Gitsigns toggle_current_line_blame<CR>", "Toggle Count" },
+				w    = { "<CMD>Gitsigns toggle_word_diff<CR>", "Toggle Word Diff" },
 			},
 		},
 		l = {
 			name = "LSP",
-			a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Code Action" },
-			d = { "<cmd>Telescope diagnostics bufnr=0 theme=get_ivy<cr>", "Buffer Diagnostics" },
-			w = { "<cmd>Telescope diagnostics<cr>", "Diagnostics" },
-			f = { "<cmd>lua require('lvim.lsp.utils').format()<cr>", "Format" },
-			i = { "<cmd>LspInfo<cr>", "Info" },
-			I = { "<cmd>Mason<cr>", "Mason Info" },
-			j = { "<cmd>lua vim.diagnostic.goto_next()<cr>", "Next Diagnostic" },
-			k = { "<cmd>lua vim.diagnostic.goto_prev()<cr>", "Prev Diagnostic" },
-			l = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
-			o = { "<cmd>lua vim.diagnostic.open_float()<cr>", "Open Float" },
-			q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
-			r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
-			s = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols" },
-			S = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Workspace Symbols" },
-			e = { "<cmd>Telescope quickfix<cr>", "Telescope Quickfix" },
+			a    = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Code Action" },
+			d    = { "<cmd>Telescope diagnostics bufnr=0 theme=get_ivy<cr>", "Buffer Diagnostics" },
+			w    = { "<cmd>Telescope diagnostics<cr>", "Diagnostics" },
+			f    = { "<cmd>lua require('lvim.lsp.utils').format()<cr>", "Format" },
+			i    = { "<cmd>LspInfo<cr>", "Info" },
+			I    = { "<cmd>Mason<cr>", "Mason Info" },
+			j    = { "<cmd>lua vim.diagnostic.goto_next()<cr>", "Next Diagnostic" },
+			k    = { "<cmd>lua vim.diagnostic.goto_prev()<cr>", "Prev Diagnostic" },
+			l    = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
+			o    = { "<cmd>lua vim.diagnostic.open_float()<cr>", "Open Float" },
+			q    = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix" },
+			r    = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
+			s    = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols" },
+			S    = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Workspace Symbols" },
+			e    = { "<cmd>Telescope quickfix<cr>", "Telescope Quickfix" },
 		},
 		p = {
 			name = "Plugins",
-			L = { "<CMD>Telescope lazy<CR>", "Installed Plugin List" },
-			i = { "<cmd>Lazy install<cr>", "Install" },
-			s = { "<cmd>Lazy sync<cr>", "Sync" },
-			S = { "<cmd>Lazy clear<cr>", "Status" },
-			c = { "<cmd>Lazy clean<cr>", "Clean" },
-			u = { "<cmd>Lazy update<cr>", "Update" },
-			p = { "<cmd>Lazy profile<cr>", "Profile" },
-			l = { "<cmd>Lazy log<cr>", "Log" },
-			d = { "<cmd>Lazy debug<cr>", "Debug" },
+			L    = { "<CMD>Telescope lazy<CR>", "Installed Plugin List" },
+			i    = { "<cmd>Lazy install<cr>", "Install" },
+			s    = { "<cmd>Lazy sync<cr>", "Sync" },
+			S    = { "<cmd>Lazy clear<cr>", "Status" },
+			c    = { "<cmd>Lazy clean<cr>", "Clean" },
+			u    = { "<cmd>Lazy update<cr>", "Update" },
+			p    = { "<cmd>Lazy profile<cr>", "Profile" },
+			l    = { "<cmd>Lazy log<cr>", "Log" },
+			d    = { "<cmd>Lazy debug<cr>", "Debug" },
 		},
 		P = {
 			name = "Projects",
-			o = { [[:lua require("telescope").extensions.project.project{}<CR>]], "Open Projects" },
-			b = { "<CMD>Telescope file_browser<CR>", "File Browser" },
-			B = { "<CMD>Telescope file_browser path=%:p:h select_buffer=true<CR>", "Buffer File Browser" },
+			o    = { [[:lua require("telescope").extensions.project.project{}<CR>]], "Open Projects" },
+			b    = { "<CMD>Telescope file_browser<CR>", "File Browser" },
+			B    = { "<CMD>Telescope file_browser path=%:p:h select_buffer=true<CR>", "Buffer File Browser" },
 		},
 		q = {
 			name = "Quit",
-			q = { "<CMD>q<CR>", "Quit" },
-			a = { "<CMD>qa!<CR>", "Quit all" },
+			q    = { "<CMD>q<CR>", "Quit" },
+			a    = { "<CMD>qa!<CR>", "Quit all" },
 		},
 		s = {
-			name = "Search",
+			name  = "Search",
 			["/"] = {
 				function()
 					-- You can pass additional configuration to telescope to change theme, layout, etc.
 					require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-						winblend = 10,
+						winblend  = 10,
 						previewer = false,
 					}))
 				end,
@@ -265,7 +265,7 @@ wk.register({
 		},
 		S = {
 			name = "Snippets",
-			a = {
+			a    = {
 				function()
 					require("scissors").addNewSnippet()
 				end,
@@ -310,7 +310,7 @@ wk.register({
 		},
 		t = {
 			name = "Tools",
-			F = {
+			F    = {
 				function()
 					require("ufo").openAllfolds()
 				end,
@@ -330,19 +330,19 @@ wk.register({
 			d = { "Toggle lazydocker Terminal" },
 			c = {
 				name = "ChatGPT",
-				c = { "<cmd>ChatGPT<CR>", "ChatGPT" },
-				e = { "<cmd>ChatGPTEditWithInstruction<CR>", "Edit with instruction", mode = { "n", "v" } },
-				g = { "<cmd>ChatGPTRun grammar_correction<CR>", "Grammar Correction", mode = { "n", "v" } },
-				t = { "<cmd>ChatGPTRun translate<CR>", "Translate", mode = { "n", "v" } },
-				k = { "<cmd>ChatGPTRun keywords<CR>", "Keywords", mode = { "n", "v" } },
-				d = { "<cmd>ChatGPTRun docstring<CR>", "Docstring", mode = { "n", "v" } },
-				a = { "<cmd>ChatGPTRun add_tests<CR>", "Add Tests", mode = { "n", "v" } },
-				o = { "<cmd>ChatGPTRun optimize_code<CR>", "Optimize Code", mode = { "n", "v" } },
-				s = { "<cmd>ChatGPTRun summarize<CR>", "Summarize", mode = { "n", "v" } },
-				f = { "<cmd>ChatGPTRun fix_bugs<CR>", "Fix Bugs", mode = { "n", "v" } },
-				x = { "<cmd>ChatGPTRun explain_code<CR>", "Explain Code", mode = { "n", "v" } },
-				r = { "<cmd>ChatGPTRun roxygen_edit<CR>", "Roxygen Edit", mode = { "n", "v" } },
-				l = {
+				c    = { "<cmd>ChatGPT<CR>", "ChatGPT" },
+				e    = { "<cmd>ChatGPTEditWithInstruction<CR>", "Edit with instruction", mode = { "n", "v" } },
+				g    = { "<cmd>ChatGPTRun grammar_correction<CR>", "Grammar Correction", mode = { "n", "v" } },
+				t    = { "<cmd>ChatGPTRun translate<CR>", "Translate", mode = { "n", "v" } },
+				k    = { "<cmd>ChatGPTRun keywords<CR>", "Keywords", mode = { "n", "v" } },
+				d    = { "<cmd>ChatGPTRun docstring<CR>", "Docstring", mode = { "n", "v" } },
+				a    = { "<cmd>ChatGPTRun add_tests<CR>", "Add Tests", mode = { "n", "v" } },
+				o    = { "<cmd>ChatGPTRun optimize_code<CR>", "Optimize Code", mode = { "n", "v" } },
+				s    = { "<cmd>ChatGPTRun summarize<CR>", "Summarize", mode = { "n", "v" } },
+				f    = { "<cmd>ChatGPTRun fix_bugs<CR>", "Fix Bugs", mode = { "n", "v" } },
+				x    = { "<cmd>ChatGPTRun explain_code<CR>", "Explain Code", mode = { "n", "v" } },
+				r    = { "<cmd>ChatGPTRun roxygen_edit<CR>", "Roxygen Edit", mode = { "n", "v" } },
+				l    = {
 					"<cmd>ChatGPTRun code_readability_analysis<CR>",
 					"Code Readability Analysis",
 					mode = { "n", "v" },
@@ -351,14 +351,13 @@ wk.register({
 		},
 		u = {
 			name = "UI",
-			h = { "<CMD>nohlsearch<CR>", "No highlight" },
-			t = { "<CMD>UndotreeToggle<CR>", "Toggle undo tree" },
-			e = { "<CMD>Oil<CR>", "Toggle Oil" },
-			r = { "<CMD>NvimTreeOpen<CR>", "Open Nvim Tree" },
-			m = {
+			h    = { "<CMD>nohlsearch<CR>", "No highlight" },
+			t    = { "<CMD>UndotreeToggle<CR>", "Toggle undo tree" },
+			e    = { "<CMD>Neotree toggle<CR>", "Toggle neotree" },
+			m    = {
 				function()
 					if vim.o.background == "dark" then
-						vim.o.background = "light"
+					   vim.o.background  = "light"
 					else
 						vim.o.background = "dark"
 					end

@@ -4,7 +4,7 @@ return {
 	config = function()
 		local hp = require("harpoon")
 		hp:setup()
-		local keys = require("utils.keybinds")
+		local keys = require("helpers.keys")
 		keys.map("n", "<leader>ta", function()
 			hp:list():add()
 		end)

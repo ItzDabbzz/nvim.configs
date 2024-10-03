@@ -11,10 +11,7 @@ return {
         "hrsh7th/cmp-cmdline",
         { "L3MON4D3/LuaSnip", build = "make install_jsregexp" },
         "saadparwaiz1/cmp_luasnip",
-        "rafamadriz/friendly-snippets",
-        "lukas-reineke/cmp-under-comparator",
-        "SergioRibera/cmp-dotenv",
-        "luckasRanarison/tailwind-tools.nvim",
+        "rafamadriz/friendly-snippets"
       },
       config = function()
         require "config.completion"

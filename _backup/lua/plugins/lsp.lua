@@ -91,7 +91,7 @@ return {
 				rust_analyzer = true,
 				templ = true,
 				cssls = true,
-				ts_ls = true,
+				tsserver = true,
 				yamlls = true,
 			}
 

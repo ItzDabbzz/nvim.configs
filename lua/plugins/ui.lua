@@ -1,229 +1,21 @@
 return {
 	{
-		"folke/noice.nvim",
-		branch = "main",
-		event = "VeryLazy",
-		opts = {
-			-- add any options here
-		},
-		dependencies = {
-			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-			"MunifTanjim/nui.nvim",
-			-- OPTIONAL:
-			--   `nvim-notify` is only needed, if you want to use the notification view.
-			--   If not available, we use `mini` as the fallback
-			--"rcarriga/nvim-notify"
-			{
-				"rcarriga/nvim-notify",
-				keys = {
-					{
-						"<leader>un",
-						function()
-							require("notify").dismiss({ silent = true, pending = true })
-						end,
-						desc = "Dismiss all Notifications",
-					},
-				},
-				opts = {},
-			},
-		},
-        -- stylua: ignore
-        keys = {
-            { "<C-Enter>",  function() require("noice").redirect(vim.fn.getcmdline()) end,                 mode = "c",                 desc = "Redirect Cmdline" },
-            { "<Leader>nl", function() require("noice").cmd("last") end,                                   desc = "Noice Last Message" },
-            { "<Leader>nh", function() require("noice").cmd("history") end,                                desc = "Noice History" },
-            { "<Leader>na", function() require("noice").cmd("all") end,                                    desc = "Noice All" },
-            { "<Leader>nd", function() require("noice").cmd("dismiss") end,                                desc = "Dismiss All" },
-            { "<C-F>",      function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end,  silent = true,              expr = true,              desc = "Scroll forward",  mode = { "i", "n", "s" } },
-            { "<C-B>",      function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true,              expr = true,              desc = "Scroll backward", mode = { "i", "n", "s" } },
-        },
-		init = function()
-			vim.opt.cmdheight = 0
-		end,
-		config = function()
-			require("noice").setup({
-				lsp = {
-					-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-					progress = {
-						enabled = false,
-					},
-					override = {
-						["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-						["vim.lsp.util.stylize_markdown"] = true,
-						["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-					},
-				},
-				-- you can enable a preset for easier configuration
-				presets = {
-					bottom_search = false, -- use a classic bottom cmdline for search
-					command_palette = true, -- position the cmdline and popupmenu together
-					long_message_to_split = true, -- long messages will be sent to a split
-					inc_rename = true, -- enables an input dialog for inc-rename.nvim
-					lsp_doc_border = true, -- add a border to hover docs and signature help
-				},
-				views = {
-					cmdline_popup = {
-						position = {
-							row = 5,
-							col = "50%",
-						},
-						size = {
-							width = 60,
-							height = "auto",
-						},
-					},
-					popupmenu = {
-						relative = "editor",
-						position = {
-							row = 8,
-							col = "50%",
-						},
-						size = {
-							width = 60,
-							height = 10,
-						},
-						border = {
-							style = "rounded",
-							padding = { 0, 1 },
-						},
-						win_options = {
-							winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
-						},
-					},
-				},
-			})
-		end,
-	},
-	{
-		"kevinhwang91/nvim-ufo",
-		dependencies = "kevinhwang91/promise-async",
-		event = "User LazyFile",
-		config = function()
-			-- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
-			--vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
-			--vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
-
-			local handler = function(virtText, lnum, endLnum, width, truncate)
-				local newVirtText = {}
-				local suffix = (" 󰁂 %d "):format(endLnum - lnum)
-				local sufWidth = vim.fn.strdisplaywidth(suffix)
-				local targetWidth = width - sufWidth
-				local curWidth = 0
-				for _, chunk in ipairs(virtText) do
-					local chunkText = chunk[1]
-					local chunkWidth = vim.fn.strdisplaywidth(chunkText)
-					if targetWidth > curWidth + chunkWidth then
-						table.insert(newVirtText, chunk)
-					else
-						chunkText = truncate(chunkText, targetWidth - curWidth)
-						local hlGroup = chunk[2]
-						table.insert(newVirtText, { chunkText, hlGroup })
-						chunkWidth = vim.fn.strdisplaywidth(chunkText)
-						-- str width returned from truncate() may less than 2nd argument, need padding
-						if curWidth + chunkWidth < targetWidth then
-							suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
-						end
-						break
-					end
-					curWidth = curWidth + chunkWidth
-				end
-				table.insert(newVirtText, { suffix, "MoreMsg" })
-				return newVirtText
-			end
-
-			require("ufo").setup({
-				fold_virt_text_handler = handler,
-				provider_selector = function(bufnr, filetype, buftype)
-					return { "treesitter", "indent" }
-				end,
-			})
-		end,
-	},
-
-	-- Display search info after match results
-	{
-		"kevinhwang91/nvim-hlslens",
-		event = "CmdlineEnter",
-		keys = {
-			{
-				"n",
-				[[<Cmd>execute("normal! " . v:count1 . "Nn"[v:searchforward])<CR><Cmd>lua require("hlslens").start()<CR>]],
-				mode = { "n", "x" },
-				desc = "Repeat last search in forward direction",
-			},
-			{
-				"N",
-				[[<Cmd>execute("normal! " . v:count1 . "nN"[v:searchforward])<CR><Cmd>lua require("hlslens").start()<CR>]],
-				mode = { "n", "x" },
-				desc = "Repeat last search in backward direction",
-			},
-			{
-				"*",
-				[[*<Cmd>lua require("hlslens").start()<CR>]],
-				desc = "Search forward for nearest word (match word)",
-			},
-			{
-				"#",
-				[[#<Cmd>lua require("hlslens").start()<CR>]],
-				desc = "Search forward for nearest word (match word)",
-			},
-			{
-				"g*",
-				[[g*<Cmd>lua require("hlslens").start()<CR>]],
-				mode = { "n", "x" },
-				desc = "Search forward for nearest word",
-			},
-			{
-				"g#",
-				[[g#<Cmd>lua require("hlslens").start()<CR>]],
-				mode = { "n", "x" },
-				desc = "Search backward for nearest word",
-			},
-		},
-		opts = {
-			calm_down = false, -- enable this if you want to execute :nohl automatically
-			enable_incsearch = false,
-			override_lens = function(render, posList, nearest, idx, _)
-				--                           🠇 This is \u00A0 since ascii space will disappear in vscode
-				local text = nearest and ("%s [%d/%d]"):format(vim.fn.getreg("/"), idx, #posList) or ""
-				local chunks = { { " ", "Ignore" }, { text, "HlSearchLensNear" } }
-				local lnum, col = unpack(posList[idx])
-				render.setVirt(0, lnum - 1, col - 1, chunks, nearest)
-			end,
-		},
+		"stevearc/oil.nvim",
+		---@module 'oil'
+		---@type oil.SetupOpts
+		opts = {},
+		-- Optional dependencies
+		dependencies = { { "echasnovski/mini.icons", opts = {} } },
+		-- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
 	},
 	{ "wakatime/vim-wakatime", lazy = false },
+	{ "nvim-tree/nvim-tree.lua", lazy = false },
+	"airblade/vim-rooter", -- Set working directory to project root
 	-- Highlight matched bracket
 	{
 		"monkoose/matchparen.nvim",
 		event = "User LazyFile",
 		opts = {},
-	},
-	"airblade/vim-rooter", -- Set working directory to project root
-	{
-		"uga-rosa/ccc.nvim", -- Colorize color codes
-		event = "User LazyFile",
-	},
-	-- {
-	--     'akinsho/toggleterm.nvim',
-	--     branch = "main",
-	--     version = "*",
-	--     cmd = {
-	--         "ToggleTerm",
-	--         "TermExec",
-	--         "ToggleTermToggleAll",
-	--         "ToggleTermSendCurrentLine",
-	--         "ToggleTermSendVisualLines",
-	--         "ToggleTermSendVisualSelection",
-	--     },
-	--     opts = { --[[ things you want to change go here]] }
-	-- },
-	-- Move stuff with <M-j> and <M-k> in both normal and visual mode
-	{
-		"echasnovski/mini.move",
-		config = function()
-			require("mini.move").setup()
-		end,
 	},
 	{
 		"petertriho/nvim-scrollbar", -- Nice scroll bar with git integration
@@ -253,7 +45,6 @@ return {
 			},
 		},
 	},
-
 	-- Show context of the current cursor position
 	{
 		"nvim-treesitter/nvim-treesitter-context",
@@ -267,18 +58,10 @@ return {
 		"HiPhish/rainbow-delimiters.nvim",
 		event = "User LazyFile",
 	},
-	{
-		"folke/neodev.nvim",
-		opts = {},
-		config = function()
-			require("neodev").setup({
-				library = { plugins = { "nvim-dap-ui" }, types = true },
-			})
-		end,
-	},
+
 	{
 		"folke/trouble.nvim",
-		branch = "dev", -- IMPORTANT!
+		branch = "main", -- IMPORTANT!
 		lazy = true,
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		keys = {
@@ -331,25 +114,25 @@ return {
 		opts = {
 			keywords = {
 				FIX = {
-					icon = require("helpers.icons").diagnostics.Bug .. " F", -- icon used for the sign, and in search results
+					icon = require("utils.icons").diagnostics.Bug .. " F", -- icon used for the sign, and in search results
 					color = "error", -- can be a hex color, or a named color (see below)
 					alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
 					-- signs = false, -- configure signs for some keywords individually
 				},
-				TODO = { icon = require("helpers.icons").ui.Note .. " T", color = "info" },
-				HACK = { icon = require("helpers.icons").ui.Fire .. " H", color = "warning" },
+				TODO = { icon = require("utils.icons").ui.Note .. " T", color = "info" },
+				HACK = { icon = require("utils.icons").ui.Fire .. " H", color = "warning" },
 				WARN = {
-					icon = require("helpers.icons").diagnostics.Warning .. " W",
+					icon = require("utils.icons").diagnostics.Warning .. " W",
 					color = "warning",
 					alt = { "WARNING", "XXX" },
 				},
 				PERF = {
-					icon = require("helpers.icons").diagnostics.BoldQuestion .. " P",
+					icon = require("utils.icons").diagnostics.BoldQuestion .. " P",
 					alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" },
 				},
-				NOTE = { icon = require("helpers.icons").diagnostics.Hint .. " N", color = "hint", alt = { "INFO" } },
+				NOTE = { icon = require("utils.icons").diagnostics.Hint .. " N", color = "hint", alt = { "INFO" } },
 				TEST = {
-					icon = require("helpers.icons").diagnostics.BoldHint .. " ",
+					icon = require("utils.icons").diagnostics.BoldHint .. " ",
 					color = "test",
 					alt = { "TESTING", "PASSED", "FAILED" },
 				},
@@ -376,32 +159,6 @@ return {
 			undo = { hlgroup = "Search" },
 			redo = { hlgroup = "Search", lhs = "U" },
 		},
-	},
-	{
-		-- TODO: Set this up
-		"RRethy/vim-illuminate",
-		event = "User FileOpened",
-		config = function(_, opts)
-			require("illuminate").configure(opts)
-
-			local function map(key, dir, buffer)
-				vim.keymap.set("n", key, function()
-					require("illuminate")["goto_" .. dir .. "_reference"](false)
-				end, { desc = dir:sub(1, 1):upper() .. dir:sub(2) .. " Reference", buffer = buffer })
-			end
-
-			map("]]", "next")
-			map("[[", "prev")
-
-			-- also set it after loading ftplugins, since a lot overwrite [[ and ]]
-			vim.api.nvim_create_autocmd("FileType", {
-				callback = function()
-					local buffer = vim.api.nvim_get_current_buf()
-					map("]]", "next", buffer)
-					map("[[", "prev", buffer)
-				end,
-			})
-		end,
 	},
 	-- Better yank/paste
 	{
@@ -550,5 +307,61 @@ return {
 			require("renamer").setup(opts)
 		end,
 	},
-	{ "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
+
+	-- active indent guide and indent text objects
+	{
+		"echasnovski/mini.indentscope",
+		event = { "BufReadPre", "BufNewFile" },
+		opts = {
+			-- symbol = "▏",
+			symbol = "│",
+			options = { try_as_border = true },
+		},
+		init = function()
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = {
+					"help",
+					"alpha",
+					"dashboard",
+					"neo-tree",
+					"Trouble",
+					"lazy",
+					"mason",
+					"notify",
+					"toggleterm",
+					"lazyterm",
+				},
+				callback = function()
+					vim.b.miniindentscope_disable = true
+				end,
+			})
+		end,
+	},
+	-- Move stuff with <M-j> and <M-k> in both normal and visual mode
+	{
+		"echasnovski/mini.move",
+		config = function()
+			require("mini.move").setup()
+		end,
+	},
+	{ "MunifTanjim/nui.nvim", lazy = true },
+	{
+		"uga-rosa/ccc.nvim", -- Colorize color codes
+		event = "User LazyFile",
+	},
+	-- Better `vim.notify()`
+	{
+		"rcarriga/nvim-notify",
+		lazy = true,
+		keys = {
+			{
+				"<leader>un",
+				function()
+					require("notify").dismiss({ silent = true, pending = true })
+				end,
+				desc = "Clear notifications",
+			},
+		},
+		opts = { timeout = 3000 },
+	},
 }

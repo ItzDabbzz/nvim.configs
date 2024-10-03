@@ -19,14 +19,7 @@ return {
 		require("dap-go").setup()
 		require("nvim-dap-virtual-text").setup({
 			-- This just tries to mitigate the chance that I leak tokens here. Probably won't stop it from happening...
-			--- A callback that determines how a variable is displayed or whether it should be omitted
-			--- @param variable Variable https://microsoft.github.io/debug-adapter-protocol/specification#Types_Variable
-			--- @param buf number
-			--- @param stackframe dap.StackFrame https://microsoft.github.io/debug-adapter-protocol/specification#Types_StackFrame
-			--- @param node userdata tree-sitter node identified as variable definition of reference (see `:h tsnode`)
-			--- @param options nvim_dap_virtual_text_options Current options for nvim-dap-virtual-text
-			--- @return string|nil A text how the virtual text should be displayed or nil, if this variable shouldn't be displayed
-			display_callback = function(variable, buf, stackframe, node, options)
+			display_callback = function(variable)
 				local name = string.lower(variable.name)
 				local value = string.lower(variable.value)
 				if name:match("secret") or name:match("api") or value:match("secret") or value:match("api") then
@@ -37,14 +30,8 @@ return {
 					return " " .. string.sub(variable.value, 1, 15) .. "... "
 				end
 
-				if options.virt_text_pos == "inline" then
-					return " = " .. variable.value:gsub("%s+", " ")
-				else
-					return variable.name .. " = " .. variable.value:gsub("%s+", " ")
-				end
+				return " " .. variable.value
 			end,
-			-- position of virtual text, see `:h nvim_buf_set_extmark()`, default tries to inline the virtual text. Use 'eol' to set to end of line
-			virt_text_pos = vim.fn.has 'nvim-0.10' == 1 and 'inline' or 'eol',
 		})
 
 		require("dap-vscode-js").setup({
@@ -104,7 +91,11 @@ return {
 				type = "lldb",
 				request = "launch",
 				program = function()
-					return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+					return vim.fn.input(
+						"Path to executable: ",
+						vim.fn.getcwd() .. "/",
+						"file"
+					)
 				end,
 				cwd = "${workspaceFolder}",
 				stopOnEntry = false,
@@ -129,7 +120,11 @@ return {
 				type = "gdb",
 				request = "launch",
 				program = function()
-					return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/zig-out/bin/", "file")
+					return vim.fn.input(
+						"Path to executable: ",
+						vim.fn.getcwd() .. "/zig-out/bin/",
+						"file"
+					)
 				end,
 				cwd = "${workspaceFolder}",
 				console = "integratedTerminal",
@@ -140,12 +135,14 @@ return {
 			vim.tbl_deep_extend("force", dap.configurations.cpp[1], {
 				initCommands = function()
 					-- Find out where to look for the pretty printer Python module
-					local rustc_sysroot = vim.fn.trim(vim.fn.system("rustc --print sysroot"))
+					local rustc_sysroot =
+						vim.fn.trim(vim.fn.system("rustc --print sysroot"))
 
 					local script_import = 'command script import "'
 						.. rustc_sysroot
 						.. '/lib/rustlib/etc/lldb_lookup.py"'
-					local commands_file = rustc_sysroot .. "/lib/rustlib/etc/lldb_commands"
+					local commands_file = rustc_sysroot
+						.. "/lib/rustlib/etc/lldb_commands"
 
 					local commands = {}
 					local file = io.open(commands_file, "r")
@@ -163,8 +160,8 @@ return {
 			unpack(dap.configurations.cpp, 2, #dap.configurations.cpp),
 		}
 
-		-- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
-		dap.configurations.go = {
+		 -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
+		 dap.configurations.go = {
 			{
 				type = "delve",
 				name = "Debug",
@@ -188,6 +185,7 @@ return {
 			},
 		}
 
+		
 		dap.configurations.lua = {
 			{
 				type = "nlua",
@@ -208,7 +206,7 @@ return {
 			},
 		}
 
-		local keys = require("utils.keybinds")
+		local keys = require("helpers.keys")
 		keys.map("n", "<leader>db", dap.toggle_breakpoint)
 		keys.map("n", "<leader>dC", dap.run_to_cursor)
 		keys.map("n", "<leader>dc", dap.continue)
