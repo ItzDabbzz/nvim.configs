@@ -39,6 +39,7 @@ return {
 				docker_compose_language_service = true,
 				gradle_ls = true,
 				gopls = true,
+				pylyzer = true,
 				jsonls = {
 					settings = {
 						json = {
@@ -202,8 +203,7 @@ return {
 					history_size = 256,
 					override_vim_notify = true,
 				},
-				integration = {
-				},
+				integration = {},
 			})
 			local navic = require("nvim-navic")
 
