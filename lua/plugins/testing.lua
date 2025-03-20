@@ -27,18 +27,18 @@ return {
             - :BookmarksCommands
             - :BookmarksGotoRecent
     ]]
-	{
-		"LintaoAmons/bookmarks.nvim",
-		dependencies = {
-			{ "stevearc/dressing.nvim" }, -- optional: to have the same UI shown in the GIF
-		},
-	},
+	-- {
+	-- 	"LintaoAmons/bookmarks.nvim",
+	-- 	dependencies = {
+	-- 		{ "stevearc/dressing.nvim" }, -- optional: to have the same UI shown in the GIF
+	-- 	},
+	-- },
 	{
 		"NStefan002/screenkey.nvim",
 		cmd = "Screenkey",
 		version = "*",
 		config = true,
-        lazy = true,
+		lazy = true,
 	},
 	{
 		"chrisgrieser/nvim-scissors",
@@ -49,10 +49,25 @@ return {
 	},
 	{
 		"hinell/lsp-timeout.nvim",
-		dependencies={ "neovim/nvim-lspconfig" }
+		dependencies = { "neovim/nvim-lspconfig" },
 	},
 	{
 		"liuzihua699/startuptime.nvim",
-		lazy = false
-	}
+		lazy = false,
+	},
+	{
+		"IogaMaster/neocord",
+		event = "VeryLazy",
+	},
+	{
+		"Kurama622/profile.nvim",
+		-- dependencies = { "3rd/image.nvim" },
+		config = function()
+			require("profile").setup({
+				-- avatar_path = "Z:\\GFX\\bart.jpg", -- default: profile.nvim/resources/profile.png
+				user = "ItzDabbzz",
+			})
+			vim.api.nvim_set_keymap("n", "<leader>po", "<cmd>Profile<cr>", { silent = true })
+		end,
+	},
 }
