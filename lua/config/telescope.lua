@@ -368,6 +368,13 @@ telescope.setup({
 				print([[Press p or "*p to paste this glyph]] .. glyph.value)
 			end,
 		},
+		project = {
+			hidden_files = true,
+			sync_with_nvim_tree = true,
+			search_by = "title",
+			order_by = "recent",
+			ignore_missing_dirs = true,
+		},
 		zoxide = {
 			prompt_title = "[ Zoxide List ]",
 
@@ -475,3 +482,4 @@ end, "Search Lazy")
 keybinds.map("n", "<space>fn", function()
 	builtin.find_files({ cwd = vim.fn.stdpath("config") })
 end, "Search Neovim Config")
+

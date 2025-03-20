@@ -104,7 +104,29 @@ local function dap_end_debug()
 		require("notify")("Debugger session ended", "warn")
 	end)
 end
+function find_directory_and_focus()
+	local actions = require("telescope.actions")
+	local action_state = require("telescope.actions.state")
+
+	local function open_nvim_tree(prompt_bufnr, _)
+		actions.select_default:replace(function()
+			local api = require("nvim-tree.api")
+
+			actions.close(prompt_bufnr)
+			local selection = action_state.get_selected_entry()
+			api.tree.open()
+			api.tree.find_file(selection.cwd .. "/" .. selection.value)
+		end)
+		return true
+	end
+
+	require("telescope.builtin").find_files({
+		find_command = { "fd", "--type", "directory", "--hidden", "--exclude", ".git/*" },
+		attach_mappings = open_nvim_tree,
+	})
+end
 local tm = require("utils.termmanager")
+local tu = require("utils.treeutils")
 wk.register({
 	["<leader>"] = {
 		h = {
@@ -146,6 +168,9 @@ wk.register({
 			name = "Files",
 			w = { "<CMD>w<CR>", "Write" },
 			W = { "<CMD>wa<CR>", "Write all" },
+			f = { tu.launch_find_files, "Find Files" },
+			F = { tu.launch_live_grep, "Live Grep Files" },
+			g = { find_directory_and_focus, "Find Directory And Focus" },
 		},
 		g = {
 			name = "Git",
@@ -353,7 +378,7 @@ wk.register({
 			name = "UI",
 			h = { "<CMD>nohlsearch<CR>", "No highlight" },
 			t = { "<CMD>UndotreeToggle<CR>", "Toggle undo tree" },
-			e = { "<CMD>Oil<CR>", "Toggle Oil" },
+			-- e = { "<CMD>Oil<CR>", "Toggle Oil" },
 			r = { "<CMD>NvimTreeOpen<CR>", "Open Nvim Tree" },
 			m = {
 				function()
