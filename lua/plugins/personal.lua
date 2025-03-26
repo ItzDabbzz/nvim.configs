@@ -1,4 +1,38 @@
+local get_errors = function(bufnr) return vim.diagnostic.get(bufnr, { severity = vim.diagnostic.severity.ERROR }) end
+local errors = get_errors(0) -- pass the current buffer; pass nil to get errors for all buffers
+
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+    callback = function()
+        errors = get_errors(0)
+    end
+})
+
 return {
+    {
+        'lukebaal/lumberjack.nvim',
+        config = function()
+
+        end,
+    },
+    {
+        'vyfor/cord.nvim',
+        build = ':Cord update',
+        opts = {
+            editor = {
+                client = 'neovim',
+                tooltip = 'The Best IDE',
+            },
+            display = {
+                theme = 'catppuccin',
+                flavor = 'dark',
+            },
+            text = {
+                editing = function(opts)
+                    return string.format('Editing %s - %s errors', opts.filename, #errors)
+                end
+            }
+        }
+    },
     {
         "KadoBOT/nvim-spotify",
         requires = "nvim-telescope/telescope.nvim",
@@ -9,7 +43,7 @@ return {
                 -- default opts
                 status = {
                     update_interval = 10000, -- the interval (ms) to check for what's currently playing
-                    format = "%s %t by %a", -- spotify-tui --format argument
+                    format = "%s %t by %a",  -- spotify-tui --format argument
                 },
             }
         end,
@@ -44,39 +78,39 @@ return {
         },
         config = function()
             local word_antisense_switch = {
-                { "true", "false" },
-                { "on", "off" },
-                { "yes", "no" },
-                { "disable", "enable" },
-                { "enabled", "disabled" },
-                { "success", "failure" },
-                { "open", "close" },
-                { "in", "out" },
-                { "resolve", "reject" },
-                { "start", "end" },
-                { "before", "after" },
-                { "from", "to" },
+                { "true",     "false" },
+                { "on",       "off" },
+                { "yes",      "no" },
+                { "disable",  "enable" },
+                { "enabled",  "disabled" },
+                { "success",  "failure" },
+                { "open",     "close" },
+                { "in",       "out" },
+                { "resolve",  "reject" },
+                { "start",    "end" },
+                { "before",   "after" },
+                { "from",     "to" },
                 { "relative", "absolute" },
-                { "up", "down" },
-                { "left", "right" },
-                { "top", "bottom" },
-                { "first", "last" },
-                { "next", "prev" },
-                { "row", "column" },
-                { "dark", "light" },
+                { "up",       "down" },
+                { "left",     "right" },
+                { "top",      "bottom" },
+                { "first",    "last" },
+                { "next",     "prev" },
+                { "row",      "column" },
+                { "dark",     "light" },
                 { "inferior", "superior" },
-                { "lower", "upper" },
+                { "lower",    "upper" },
                 { "selected", "unselected" },
-                { "active", "inactive" },
-                { "white", "black" },
-                { "get", "post" },
-                { "forward", "backward" },
-                { "odd", "even" },
-                { "+", "-" },
-                { ">", "<" },
-                { "=", "!=" },
-                { '"', "'" },
-                { "'", '"' },
+                { "active",   "inactive" },
+                { "white",    "black" },
+                { "get",      "post" },
+                { "forward",  "backward" },
+                { "odd",      "even" },
+                { "+",        "-" },
+                { ">",        "<" },
+                { "=",        "!=" },
+                { '"',        "'" },
+                { "'",        '"' },
             }
 
             local variable_style_switch = {
@@ -115,7 +149,12 @@ return {
     },
     {
         "petertriho/nvim-scrollbar", -- Nice scroll bar with git integration
-        event = "User LazyFile",
+        dependencies = {
+            'kevinhwang91/nvim-hlslens',
+            'lewis6991/gitsigns.nvim',
+            'kevinhwang91/nvim-ufo',
+            'kevinhwang91/promise-async'
+        },
         opts = {
             hide_if_all_visible = true,
             handle = {
@@ -125,7 +164,7 @@ return {
                 cursor = true,
                 diagnostic = true,
                 gitsigns = true, -- Requires gitsigns
-                search = true, -- Requires hlslens
+                search = true,   -- Requires hlslens
             },
             marks = {
                 Cursor = { text = "—" },
@@ -194,8 +233,8 @@ return {
             keywords = {
                 FIX = {
                     icon = require("utils.icons").diagnostics.Bug .. " F", -- icon used for the sign, and in search results
-                    color = "error", -- can be a hex color, or a named color (see below)
-                    alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
+                    color = "error",                                       -- can be a hex color, or a named color (see below)
+                    alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },            -- a set of other keywords that all map to this FIX keywords
                     -- signs = false, -- configure signs for some keywords individually
                 },
                 TODO = { icon = require("utils.icons").ui.Note .. " T", color = "info" },
@@ -217,8 +256,8 @@ return {
                 },
             },
             gui_style = {
-                fg = "NONE", -- The gui style to use for the fg highlight group.
-                bg = "BOLD", -- The gui style to use for the bg highlight group.
+                fg = "NONE",       -- The gui style to use for the fg highlight group.
+                bg = "BOLD",       -- The gui style to use for the bg highlight group.
             },
             merge_keywords = true, -- when true, custom keywords will be merged with the defaults
             -- highlighting of the line conta

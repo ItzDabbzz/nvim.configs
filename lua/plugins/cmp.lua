@@ -51,7 +51,12 @@ return {
                 "dmitmel/cmp-cmdline-history",
                 "roginfarrer/cmp-css-variables",
                 "SergioRibera/cmp-dotenv",
+                "luckasRanarison/tailwind-tools.nvim",
+                "lukas-reineke/cmp-under-comparator",
             },
+            {
+                "onsails/lspkind.nvim"
+            }
         },
         opts = function()
             return require "nvchad.configs.cmp"

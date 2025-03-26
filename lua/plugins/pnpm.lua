@@ -11,4 +11,12 @@ return {
             telescope.load_extension "pnpm"
         end,
     },
+    {
+        'BibekBhusal0/nvim-shadcn',
+        opts = require "configs.shadcn",
+        cmd = { 'ShadcnAdd' },
+        keys = {
+            { '<leader>sa', ':ShadcnAdd<CR>', desc = 'Add shadcn component' },
+        }
+    }
 }

@@ -9,7 +9,21 @@ M.base46 = {
     theme = "catppuccin",
     transparency = true,
     theme_toggle = { "poimandres", "catppuccin", "sweetpastel", "vscode_dark" },
-
+    integrations = {
+        "bufferline",
+        "dap",
+        "devicons",
+        "diffview",
+        "git",
+        "git-conflict",
+        "nvimtree",
+        "syntax",
+        "tbline",
+        "telescope",
+        "todo",
+        "treesitter",
+        "trouble",
+    },
     -- hl_override = {
     -- 	Comment = { italic = true },
     -- 	["@comment"] = { italic = true },
@@ -33,7 +47,7 @@ M.ui = {
     statusline = {
         enabled = true,
         theme = "vscode_colored",
-        order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "diagnostics", "lsp", "cursor", "cwd", "status" },
+        order = { "mode", "file", "git", "status", "%=", "lsp_msg", "%=", "diagnostics", "lsp", "cursor", "cwd" },
         modules = {
             status = status.listen,
         },
